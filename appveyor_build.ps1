@@ -31,7 +31,7 @@ echo "Building for Linux amd64"
 $env:GOOS = "linux"
 $env:GOARCH = "amd64"
 
-$linuxCommand = 'go build -o buildOutput\tiger_linux_amd64 -ldflags'
+$linuxCommand = 'go build -o buildOutput\tiger_linux_amd64'
 
 iex $linuxCommand
 
