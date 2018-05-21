@@ -1,6 +1,8 @@
-package main
+package config
 
 import (
+	"path/filepath"
+
 	"github.com/BurntSushi/toml"
 	lua "github.com/yuin/gopher-lua"
 )
@@ -17,7 +19,8 @@ type serverConfig struct {
 }
 
 type discordConfig struct {
-	Token string
+	Token  string
+	Prefix string
 }
 
 type databaseConfig struct {
@@ -27,8 +30,8 @@ type databaseConfig struct {
 	Schema   string
 }
 
-// LoadConfig loads the application config file
-func LoadConfig(path string) (*Config, error) {
+// Load loads the application config file
+func Load(path string) (*Config, error) {
 	cfg := Config{}
 
 	// Decode config.toml config file
@@ -38,7 +41,7 @@ func LoadConfig(path string) (*Config, error) {
 
 	// Check if database is already set
 	if cfg.Database.Schema == "" {
-		if err := loadServerConfig(cfg.Server.Path, &cfg); err != nil {
+		if err := loadServerConfig(filepath.Join(cfg.Server.Path, "config.lua"), &cfg); err != nil {
 			return nil, err
 		}
 	}

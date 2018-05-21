@@ -8,6 +8,18 @@
   version = "v0.3.0"
 
 [[projects]]
+  name = "github.com/bwmarrin/discordgo"
+  packages = ["."]
+  revision = "4a33b9bc7c56cfdb9bb244e33e83cb3941fe2bdc"
+  version = "v0.18.0"
+
+[[projects]]
+  name = "github.com/gorilla/websocket"
+  packages = ["."]
+  revision = "ea4d1f681babbce9545c9c5f3d5194a789c89f5b"
+  version = "v1.2.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/yuin/gopher-lua"
   packages = [
@@ -18,9 +30,19 @@
   ]
   revision = "b0fa786cf4ea360285924c4a7fd42325be57aec8"
 
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/crypto"
+  packages = [
+    "nacl/secretbox",
+    "poly1305",
+    "salsa20/salsa"
+  ]
+  revision = "1a580b3eff7814fc9b40602fd35256c63b50f491"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "cd16e187536e0e0f27ba3a94b95101962445b183d1b26bdd1d9189fb5dfae5f3"
+  inputs-digest = "3e1a54c4e6a085e41c208e39bbc7bc8f39630daebfcbba9406192915b9db645d"
   solver-name = "gps-cdcl"
   solver-version = 1
