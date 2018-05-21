@@ -2,4 +2,5 @@
 path = ""
 
 [discord]
+prefix = "!tiger "
 token = ""

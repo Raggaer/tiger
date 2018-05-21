@@ -107,9 +107,10 @@ type MonsterLootList struct {
 // MonsterItem defines a monster lootable item
 type MonsterItem struct {
 	XMLName  xml.Name `xml:"item"`
+	ID int `xml:"id,attr"`
 	Name     string   `xml:"name,attr"`
 	CountMax int      `xml:"countmax,attr"`
-	CHance   int      `xml:"chance,attr"`
+	Chance   int      `xml:"chance,attr"`
 }
 
 // LoadMonster loads the given monster xml file

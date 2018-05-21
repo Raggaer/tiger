@@ -13,6 +13,7 @@ type xmlTaskList struct {
 	rw       sync.Mutex
 	Errors   []*xmlTaskError
 	Monsters map[string]*xml.Monster
+	Items    map[int]xml.Item
 }
 
 type xmlTaskError struct {
@@ -26,10 +27,11 @@ func loadServerData(cfg *config.Config) (*xmlTaskList, *xmlTaskError) {
 	}
 	// Create wait group for all parsing tasks
 	tasks := &sync.WaitGroup{}
-	tasks.Add(1)
+	tasks.Add(2)
 
 	// Execute tasks
 	go loadServerMonsters(taskList, tasks, cfg.Server.Path)
+	go loadServerItems(taskList, tasks, cfg.Server.Path)
 
 	// Wait for all tasks to end
 	tasks.Wait()
@@ -41,10 +43,49 @@ func loadServerData(cfg *config.Config) (*xmlTaskList, *xmlTaskError) {
 	return taskList, nil
 }
 
+func loadServerItems(taskList *xmlTaskList, wg *sync.WaitGroup, path string) {
+	defer wg.Done()
+
+	// Load item list
+	itemList, err := xml.LoadItemList(filepath.Join(path, "data", "items", "items.xml"))
+	if err != nil {
+		taskList.rw.Lock()
+		taskList.Errors = append(taskList.Errors, &xmlTaskError{
+			Name:  "Item list",
+			Error: err,
+		})
+		taskList.rw.Unlock()
+		return
+	}
+
+	// Convert item slice to map
+	items := make(map[int]xml.Item, len(itemList.Items))
+	for _, i := range itemList.Items {
+		if i.FromID != 0 && i.ToID != 0 {
+
+			// Populate items range
+			for x := i.FromID; x <= i.ToID; x++ {
+				items[x] = i
+			}
+			continue
+		}
+
+		// Populate normal item
+		if i.ID != 0 {
+			items[i.ID] = i
+		}
+	}
+
+	// Set task item list
+	taskList.rw.Lock()
+	taskList.Items = items
+	taskList.rw.Unlock()
+}
+
 func loadServerMonsters(taskList *xmlTaskList, wg *sync.WaitGroup, path string) {
 	defer wg.Done()
 
-	// Load monster list file
+	// Load monster list
 	monsterList, err := xml.LoadMonsterList(filepath.Join(path, "data", "monster", "monsters.xml"))
 	if err != nil {
 		taskList.rw.Lock()

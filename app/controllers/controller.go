@@ -12,4 +12,5 @@ type Context struct {
 	Start    time.Time
 	Config   *config.Config
 	Monsters map[string]*xml.Monster
+	Items    map[int]xml.Item
 }

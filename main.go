@@ -29,7 +29,7 @@ func main() {
 
 	// Load server data
 	tasks, taskErr := loadServerData(cfg)
-	if err != nil {
+	if taskErr != nil {
 		log.Fatalf("Unable to complete xml task %s: %v", taskErr.Name, taskErr.Error)
 	}
 

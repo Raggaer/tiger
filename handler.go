@@ -32,6 +32,7 @@ func registerHandlers(cfg *config.Config) {
 	// Register handlers
 	handlers.Add("version", controllers.Version)
 	handlers.Add("uptime", controllers.Uptime)
+	handlers.Add("monster", controllers.ViewMonster)
 }
 
 // Add registers a new handler
@@ -47,6 +48,7 @@ func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList) func(s *discord
 	ctx := controllers.Context{
 		Config:   cfg,
 		Monsters: tasks.Monsters,
+		Items:    tasks.Items,
 		Start:    time.Now(),
 	}
 
@@ -65,6 +67,9 @@ func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList) func(s *discord
 				if !ok {
 					continue
 				}
+
+				// Remove prefix from content
+				m.Content = strings.TrimSpace(strings.TrimPrefix(m.Content, h.Prefix))
 
 				// Execute handler
 				if err := handlerFunc(&ctx, s, m); err != nil {

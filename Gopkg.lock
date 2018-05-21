@@ -40,9 +40,43 @@
   ]
   revision = "1a580b3eff7814fc9b40602fd35256c63b50f491"
 
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/net"
+  packages = [
+    "html",
+    "html/atom",
+    "html/charset"
+  ]
+  revision = "57065200b4b034a1c8ad54ff77069408c2218ae6"
+
+[[projects]]
+  name = "golang.org/x/text"
+  packages = [
+    "encoding",
+    "encoding/charmap",
+    "encoding/htmlindex",
+    "encoding/internal",
+    "encoding/internal/identifier",
+    "encoding/japanese",
+    "encoding/korean",
+    "encoding/simplifiedchinese",
+    "encoding/traditionalchinese",
+    "encoding/unicode",
+    "internal/gen",
+    "internal/tag",
+    "internal/utf8internal",
+    "language",
+    "runes",
+    "transform",
+    "unicode/cldr"
+  ]
+  revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
+  version = "v0.3.0"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "3e1a54c4e6a085e41c208e39bbc7bc8f39630daebfcbba9406192915b9db645d"
+  inputs-digest = "6b9ee26ee3d818acc2bd83643687e7146ac55b5cde53a67cdd6c13c5821a6aea"
   solver-name = "gps-cdcl"
   solver-version = 1
