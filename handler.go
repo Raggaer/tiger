@@ -42,11 +42,12 @@ func (h *handlerList) Add(prefix string, hd interface{}) {
 	})
 }
 
-func handleCreateMessage(cfg *config.Config) func(s *discordgo.Session, m *discordgo.MessageCreate) {
+func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList) func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Create controller context
 	ctx := controllers.Context{
-		Config: cfg,
-		Start:  time.Now(),
+		Config:   cfg,
+		Monsters: tasks.Monsters,
+		Start:    time.Now(),
 	}
 
 	return func(s *discordgo.Session, m *discordgo.MessageCreate) {

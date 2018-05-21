@@ -27,6 +27,12 @@ func main() {
 	// Register handlers
 	registerHandlers(cfg)
 
+	// Load server data
+	tasks, taskErr := loadServerData(cfg)
+	if err != nil {
+		log.Fatalf("Unable to complete xml task %s: %v", taskErr.Name, taskErr.Error)
+	}
+
 	// Create discord session
 	dg, err := discordgo.New("Bot " + cfg.Discord.Token)
 	if err != nil {
@@ -34,7 +40,7 @@ func main() {
 	}
 
 	// Register mesasge handler
-	dg.AddHandler(handleCreateMessage(cfg))
+	dg.AddHandler(handleCreateMessage(cfg, tasks))
 
 	// Open discord session
 	if err := dg.Open(); err != nil {
