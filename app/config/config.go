@@ -21,6 +21,7 @@ type serverConfig struct {
 type discordConfig struct {
 	Token  string
 	Prefix string
+	Status string
 }
 
 type databaseConfig struct {

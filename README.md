@@ -30,6 +30,7 @@ path = "" # Your server location
 [discord]
 prefix = "/" # Prefix for the bot commands
 token = "" # Discord bot token
+status = "" # Bot status message (Playing...)
 ```
 
 By default **tiger** will try to load your database settings from your server `config.lua` file, you can however use the config file for that too:

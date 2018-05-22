@@ -52,6 +52,9 @@ func main() {
 	if err := dg.Open(); err != nil {
 		log.Fatalf("Unable to open discord session: %v", err)
 	}
+	if err := dg.UpdateStatus(0, cfg.Discord.Status); err != nil {
+		log.Fatalf("Unable to set bot status: %v", err)
+	}
 
 	// Wait here until CTRL-C or other term signal is received
 	log.Println("Tiger is now running. Press CTRL-C to exit.")
