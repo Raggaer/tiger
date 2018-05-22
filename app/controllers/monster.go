@@ -12,7 +12,12 @@ import (
 func ViewMonster(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) error {
 	data := strings.Split(m.Content, ",")
 	if len(data) <= 1 {
-		return nil
+		_, err := s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
+			Color:       3447003,
+			Title:       "View monster",
+			Description: "Not enough parameters. Command usage `" + context.Config.Discord.Prefix + "monster Name, option`",
+		})
+		return err
 	}
 
 	// Get monster

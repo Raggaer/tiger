@@ -9,8 +9,9 @@ import (
 
 // Context main controller for all actions
 type Context struct {
-	Start    time.Time
-	Config   *config.Config
-	Monsters map[string]*xml.Monster
-	Items    map[int]xml.Item
+	Start     time.Time
+	Config    *config.Config
+	Monsters  map[string]*xml.Monster
+	Vocations map[string]*xml.Vocation
+	Items     map[int]xml.Item
 }

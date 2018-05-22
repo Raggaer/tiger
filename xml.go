@@ -9,11 +9,12 @@ import (
 )
 
 type xmlTaskList struct {
-	Path     string
-	rw       sync.Mutex
-	Errors   []*xmlTaskError
-	Monsters map[string]*xml.Monster
-	Items    map[int]xml.Item
+	Path      string
+	rw        sync.Mutex
+	Errors    []*xmlTaskError
+	Monsters  map[string]*xml.Monster
+	Vocations map[string]*xml.Vocation
+	Items     map[int]xml.Item
 }
 
 type xmlTaskError struct {
@@ -27,11 +28,12 @@ func loadServerData(cfg *config.Config) (*xmlTaskList, *xmlTaskError) {
 	}
 	// Create wait group for all parsing tasks
 	tasks := &sync.WaitGroup{}
-	tasks.Add(2)
+	tasks.Add(3)
 
 	// Execute tasks
 	go loadServerMonsters(taskList, tasks, cfg.Server.Path)
 	go loadServerItems(taskList, tasks, cfg.Server.Path)
+	go loadServerVocations(taskList, tasks, cfg.Server.Path)
 
 	// Wait for all tasks to end
 	tasks.Wait()
@@ -41,6 +43,33 @@ func loadServerData(cfg *config.Config) (*xmlTaskList, *xmlTaskError) {
 		return nil, taskList.Errors[0]
 	}
 	return taskList, nil
+}
+
+func loadServerVocations(taskList *xmlTaskList, wg *sync.WaitGroup, path string) {
+	defer wg.Done()
+
+	// Load vocation list
+	vocList, err := xml.LoadVocationList(filepath.Join(path, "data", "XML", "vocations.xml"))
+	if err != nil {
+		taskList.rw.Lock()
+		taskList.Errors = append(taskList.Errors, &xmlTaskError{
+			Name:  "Vocation list",
+			Error: err,
+		})
+		taskList.rw.Unlock()
+		return
+	}
+
+	// Convert vocation slice to map
+	vocs := make(map[string]*xml.Vocation, len(vocList.Vocations))
+	for e, i := range vocList.Vocations {
+		vocs[i.Name] = &vocList.Vocations[e]
+	}
+
+	// Set task vocation list
+	taskList.rw.Lock()
+	taskList.Vocations = vocs
+	taskList.rw.Unlock()
 }
 
 func loadServerItems(taskList *xmlTaskList, wg *sync.WaitGroup, path string) {

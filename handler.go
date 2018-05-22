@@ -46,15 +46,21 @@ func (h *handlerList) Add(prefix string, hd interface{}) {
 func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList) func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Create controller context
 	ctx := controllers.Context{
-		Config:   cfg,
-		Monsters: tasks.Monsters,
-		Items:    tasks.Items,
-		Start:    time.Now(),
+		Config:    cfg,
+		Monsters:  tasks.Monsters,
+		Items:     tasks.Items,
+		Vocations: tasks.Vocations,
+		Start:     time.Now(),
 	}
 
 	return func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		// Ignore all messages created by the bot
 		if m.Author.ID == s.State.User.ID {
+			return
+		}
+
+		// Ignore bot messages
+		if m.Author.Bot {
 			return
 		}
 
