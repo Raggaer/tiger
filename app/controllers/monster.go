@@ -34,8 +34,27 @@ func ViewMonster(context *Context, s *discordgo.Session, m *discordgo.MessageCre
 	switch strings.TrimSpace(data[1]) {
 	case "loot":
 		return viewMonsterLoot(context, s, m, monster)
+	case "info":
+		return viewMonsterInformation(context, s, m, monster)
 	}
 	return nil
+}
+
+func viewMonsterInformation(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, monster *xml.Monster) error {
+	msg := "**You view " + monster.Description + "** \r\n \r\n"
+	msg += fmt.Sprintf("- **Experience**: %d \r\n", monster.Experience)
+	msg += fmt.Sprintf("- **Speed**: %d \r\n", monster.Speed)
+	msg += fmt.Sprintf("- **Health**: %d \r\n \r\n", monster.Health.Now)
+	for _, attack := range monster.Attacks.Attacks {
+		msg += fmt.Sprintf("- **Attack**: %s (%d, %d)\r\n", attack.Name, attack.Min, attack.Max)
+	}
+	// Send information message
+	_, err := s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
+		Color:       3447003,
+		Title:       monster.Name + " info",
+		Description: msg,
+	})
+	return err
 }
 
 func viewMonsterLoot(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, monster *xml.Monster) error {
