@@ -17,7 +17,7 @@ func Version(context *Context, s *discordgo.Session, m *discordgo.MessageCreate)
 	return err
 }
 
-// Uptime returns the current uptime
+// Uptime returns the current bot uptime
 func Uptime(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) error {
 	// Retrieve time diff
 	_, _, days, hours, minutes, seconds := diff(context.Start, time.Now())

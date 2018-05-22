@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/raggaer/tiger/app/config"
@@ -14,4 +15,5 @@ type Context struct {
 	Monsters  map[string]*xml.Monster
 	Vocations map[string]*xml.Vocation
 	Items     map[int]xml.Item
+	DB        *sql.DB
 }

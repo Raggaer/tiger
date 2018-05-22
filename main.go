@@ -24,6 +24,12 @@ func main() {
 		log.Fatalf("Unable to load application config: %v", err)
 	}
 
+	// Open database connection
+	db, err := loadDatabase(cfg.Database.User, cfg.Database.Password, cfg.Database.Schema)
+	if err != nil {
+		log.Fatalf("Unable to open database connection: %v", err)
+	}
+
 	// Register handlers
 	registerHandlers(cfg)
 
@@ -40,7 +46,7 @@ func main() {
 	}
 
 	// Register mesasge handler
-	dg.AddHandler(handleCreateMessage(cfg, tasks))
+	dg.AddHandler(handleCreateMessage(cfg, tasks, db))
 
 	// Open discord session
 	if err := dg.Open(); err != nil {

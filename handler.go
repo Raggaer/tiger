@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"strings"
 	"time"
 
@@ -45,7 +46,7 @@ func (h *handlerList) Add(prefix string, hd interface{}) {
 	})
 }
 
-func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList) func(s *discordgo.Session, m *discordgo.MessageCreate) {
+func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList, db *sql.DB) func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Create controller context
 	ctx := controllers.Context{
 		Config:    cfg,
@@ -53,6 +54,7 @@ func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList) func(s *discord
 		Items:     tasks.Items,
 		Vocations: tasks.Vocations,
 		Start:     time.Now(),
+		DB:        db,
 	}
 
 	return func(s *discordgo.Session, m *discordgo.MessageCreate) {
