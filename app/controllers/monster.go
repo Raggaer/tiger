@@ -24,8 +24,9 @@ func ViewMonster(context *Context, s *discordgo.Session, m *discordgo.MessageCre
 	monster, ok := context.Monsters[strings.TrimSpace(data[0])]
 	if !ok {
 		_, err := s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
-			Color: 3447003,
-			Title: "Monster " + m.Content + " not found",
+			Color:       3447003,
+			Title:       "Monster not found",
+			Description: "Monster not found. Command usage `" + context.Config.Discord.Prefix + "monster Name, option`",
 		})
 		return err
 	}
@@ -51,7 +52,7 @@ func viewMonsterInformation(context *Context, s *discordgo.Session, m *discordgo
 	// Send information message
 	_, err := s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
 		Color:       3447003,
-		Title:       monster.Name + " info",
+		Title:       monster.Name + " information",
 		Description: msg,
 	})
 	return err
