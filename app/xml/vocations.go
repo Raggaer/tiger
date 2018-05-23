@@ -14,7 +14,7 @@ type VocationList struct {
 // Vocation defines a server voation
 type Vocation struct {
 	XMLName     xml.Name `xml:"vocation"`
-	ID          int      `xml:"int,attr"`
+	ID          int      `xml:"id,attr"`
 	Name        string   `xml:"name,attr"`
 	Description string   `xml:"description,attr"`
 	GainCap     int      `xml:"gaincap,attr"`
