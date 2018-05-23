@@ -35,7 +35,7 @@ func registerHandlers(cfg *config.Config) {
 	handlers.Add("version", controllers.Version)
 	handlers.Add("uptime", controllers.Uptime)
 	handlers.Add("monster", controllers.ViewMonster)
-
+	handlers.Add("player", controllers.ViewPlayer)
 }
 
 // Add registers a new handler

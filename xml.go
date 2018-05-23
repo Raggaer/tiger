@@ -2,6 +2,7 @@ package main
 
 import (
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/raggaer/tiger/app/config"
@@ -63,7 +64,7 @@ func loadServerVocations(taskList *xmlTaskList, wg *sync.WaitGroup, path string)
 	// Convert vocation slice to map
 	vocs := make(map[string]*xml.Vocation, len(vocList.Vocations))
 	for e, i := range vocList.Vocations {
-		vocs[i.Name] = &vocList.Vocations[e]
+		vocs[strings.ToLower(i.Name)] = &vocList.Vocations[e]
 	}
 
 	// Set task vocation list
@@ -141,7 +142,7 @@ func loadServerMonsters(taskList *xmlTaskList, wg *sync.WaitGroup, path string) 
 		}
 
 		// Append monster to the list
-		monsters[xmlMonster.Name] = xmlMonster
+		monsters[strings.ToLower(xmlMonster.Name)] = xmlMonster
 	}
 
 	// Set task monster list
