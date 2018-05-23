@@ -1,6 +1,9 @@
 package models
 
-import "database/sql"
+import (
+	"database/sql"
+	"strings"
+)
 
 // Player defines a server character
 type Player struct {
@@ -80,9 +83,17 @@ func GetPlayerByName(db *sql.DB, name string) (*Player, error) {
 			looklegs,
 			looktype,
 			lookaddons,
-			maglevel
-		FROM players WHERE name = ?
-	`, name)
+			maglevel,
+			stamina,
+			skill_fist,
+			skill_club,
+			skill_sword,
+			skill_axe,
+			skill_dist,
+			skill_shielding,
+			skill_fishing
+		FROM players WHERE LOWER(name) = ?
+	`, strings.ToLower(name))
 	if err := row.Scan(
 		&player.Name,
 		&player.GroupID,
@@ -99,6 +110,14 @@ func GetPlayerByName(db *sql.DB, name string) (*Player, error) {
 		&player.LookType,
 		&player.LookAddons,
 		&player.MagicLevel,
+		&player.Stamina,
+		&player.SkillFist,
+		&player.SkillClub,
+		&player.SkillSword,
+		&player.SkillAxe,
+		&player.SkillDist,
+		&player.SkillShielding,
+		&player.SkillFishing,
 	); err != nil {
 		return nil, err
 	}

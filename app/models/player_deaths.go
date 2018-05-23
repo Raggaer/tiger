@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"strings"
 
 	"github.com/raggaer/tiger/app/xml"
 )
@@ -25,7 +26,7 @@ func GetPlayerDeathsByMonster(db *sql.DB, m *xml.Monster) ([]*PlayerDeath, error
 	deaths := []*PlayerDeath{}
 
 	// Retrieve deaths using monster description
-	rows, err := db.Query("SELECT a.name, b.time, b.level FROM players a, player_deaths b WHERE b.killed_by = ? ORDER BY time DESC LIMIT 10", m.Description)
+	rows, err := db.Query("SELECT a.name, b.time, b.level FROM players a, player_deaths b WHERE LOWER(b.killed_by) = ? ORDER BY time DESC LIMIT 10", strings.ToLower(m.Description))
 	if err != nil {
 		return nil, err
 	}
