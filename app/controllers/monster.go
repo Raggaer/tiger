@@ -81,7 +81,7 @@ func viewMonsterKilledPlayers(context *Context, s *discordgo.Session, m *discord
 
 func viewMonsterInformation(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, monster *xml.Monster) error {
 	msg := strings.Builder{}
-	msg.WriteString("**You view" + monster.Description + "** \r\n \r\n")
+	msg.WriteString("**You view " + monster.Description + "** \r\n \r\n")
 	msg.WriteString("- **Experience**: " + strconv.Itoa(monster.Experience) + "\r\n")
 	msg.WriteString("- **Speed**: " + strconv.Itoa(monster.Speed) + " \r\n")
 	msg.WriteString("- **Health**: " + strconv.Itoa(monster.Health.Now) + " \r\n \r\n")
