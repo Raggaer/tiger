@@ -3,6 +3,7 @@ package controllers
 import (
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/raggaer/tiger/app/models"
@@ -21,7 +22,7 @@ var monsterCommand = Command{
 			Description: "Returns the loot table of the monster",
 		},
 		{
-			Name:        "killed",
+			Name:        "deaths",
 			Description: "Returns the last 10 players killed by the monster",
 		},
 	},
@@ -46,7 +47,7 @@ func ViewMonster(context *Context, s *discordgo.Session, m *discordgo.MessageCre
 		return viewMonsterLoot(context, s, m, monster)
 	case "info":
 		return viewMonsterInformation(context, s, m, monster)
-	case "killed":
+	case "deaths":
 		return viewMonsterKilledPlayers(context, s, m, monster)
 	default:
 		return viewMonsterInformation(context, s, m, monster)
@@ -54,7 +55,7 @@ func ViewMonster(context *Context, s *discordgo.Session, m *discordgo.MessageCre
 }
 
 func viewMonsterKilledPlayers(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, monster *xml.Monster) error {
-	deaths, err := models.GetPlayerDeathsByMonster(context.DB, monster)
+	deaths, err := models.GetPlayerDeathsByMonster(context.DB, monster, 10)
 	if err != nil {
 		return err
 	}
@@ -64,8 +65,9 @@ func viewMonsterKilledPlayers(context *Context, s *discordgo.Session, m *discord
 	if len(deaths) <= 0 {
 		msg.WriteString("\r\nNoone")
 	} else {
-		for _, d := range deaths {
-			msg.WriteString("\r\n- Killed **" + d.Player.Name + "** at level **" + strconv.Itoa(d.Level) + "**")
+		for i, d := range deaths {
+			deathTime := timeAgo(time.Unix(d.Time, 0), time.Now())
+			msg.WriteString("\r\n" + strconv.Itoa(i+1) + ". Killed **" + d.Player.Name + "** at level **" + strconv.Itoa(d.Level) + "** - *" + deathTime + " ago*")
 		}
 	}
 

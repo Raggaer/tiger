@@ -21,12 +21,35 @@ type PlayerDeath struct {
 	MostDamageUnjustified bool
 }
 
-// GetPlayerDeathsByMonster retrieves deaths caused by a monster
-func GetPlayerDeathsByMonster(db *sql.DB, m *xml.Monster) ([]*PlayerDeath, error) {
+// GetPlayerDeaths retrieves player deaths
+func GetPlayerDeaths(db *sql.DB, p *Player, limit int) ([]*PlayerDeath, error) {
 	deaths := []*PlayerDeath{}
 
 	// Retrieve deaths using monster description
-	rows, err := db.Query("SELECT a.name, b.time, b.level FROM players a, player_deaths b WHERE LOWER(b.killed_by) = ? ORDER BY time DESC LIMIT 10", strings.ToLower(m.Description))
+	rows, err := db.Query("SELECT most_damage_by, time, level FROM player_deaths WHERE player_id = ? ORDER BY time DESC LIMIT ?", p.ID, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// Parse deaths
+	for rows.Next() {
+		death := &PlayerDeath{}
+		if err := rows.Scan(&death.MostDamageBy, &death.Time, &death.Level); err != nil {
+			return nil, err
+		}
+		deaths = append(deaths, death)
+	}
+
+	return deaths, nil
+}
+
+// GetPlayerDeathsByMonster retrieves deaths caused by a monster
+func GetPlayerDeathsByMonster(db *sql.DB, m *xml.Monster, limit int) ([]*PlayerDeath, error) {
+	deaths := []*PlayerDeath{}
+
+	// Retrieve deaths using monster description
+	rows, err := db.Query("SELECT a.name, b.time, b.level FROM players a, player_deaths b WHERE LOWER(b.killed_by) = ? ORDER BY b.time DESC LIMIT ?", strings.ToLower(m.Description), limit)
 	if err != nil {
 		return nil, err
 	}

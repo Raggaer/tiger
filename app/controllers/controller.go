@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"strconv"
 	"strings"
 	"time"
 
@@ -59,4 +60,77 @@ func (c *Command) RenderUsage(title string, ctx *Context, s *discordgo.Session, 
 		Fields:      fields,
 	})
 	return err
+}
+
+func timeAgo(a time.Time, b time.Time) string {
+	y, m, d, h, x, s := diff(a, b)
+	msg := ""
+
+	// Render message as year
+	if y > 0 {
+		msg += strconv.Itoa(y)
+		if y == 1 {
+			msg += " year"
+		} else {
+			msg += " years"
+		}
+		return msg
+	}
+
+	// Render message as month
+	if m > 0 {
+		msg += strconv.Itoa(m)
+		if m == 1 {
+			msg += " month"
+		} else {
+			msg += " months"
+		}
+		return msg
+	}
+
+	// Render message as day
+	if d > 0 {
+		msg += strconv.Itoa(d)
+		if d == 1 {
+			msg += " day"
+		} else {
+			msg += " days"
+		}
+		return msg
+	}
+
+	// Render message as hour
+	if h > 0 {
+		msg += strconv.Itoa(h)
+		if h == 1 {
+			msg += " hour"
+		} else {
+			msg += " hours"
+		}
+		return msg
+	}
+
+	// Render message as minute
+	if x > 0 {
+		msg += strconv.Itoa(x)
+		if x == 1 {
+			msg += " minute"
+		} else {
+			msg += " minutes"
+		}
+		return msg
+	}
+
+	// Render message as second
+	if s > 0 {
+		msg += strconv.Itoa(s)
+		if s == 1 {
+			msg += " second"
+		} else {
+			msg += " seconds"
+		}
+		return msg
+	}
+
+	return ""
 }
