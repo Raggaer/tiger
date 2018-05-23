@@ -6,8 +6,8 @@ Discord bot for Open Tibia Servers
 
 ## Features
 
-- Monster lookup
-- Vocation lookup
+- Monster lookup (information, loot, players killed)
+- Vocation lookup (information)
 
 ## Installing
 
