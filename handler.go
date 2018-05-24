@@ -37,6 +37,7 @@ func registerHandlers(cfg *config.Config) {
 	handlers.Add("uptime", controllers.Uptime)
 	handlers.Add("monster", controllers.ViewMonster)
 	handlers.Add("player", controllers.ViewPlayer)
+	handlers.Add("deaths", controllers.LatestDeaths)
 	handlers.Add("r", reloadTemplates)
 }
 

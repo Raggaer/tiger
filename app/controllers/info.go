@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/raggaer/tiger/app/models"
 )
 
 var (
@@ -13,6 +14,28 @@ var (
 	// BuildDate date where the application was built
 	BuildDate string
 )
+
+// LatestDeaths retrieves the server latest deaths
+func LatestDeaths(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
+	// Load server latest deaths
+	deaths, err := models.GetServerDeaths(context.DB, 10)
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := context.ExecuteTemplate("server_death.md", map[string]interface{}{
+		"deaths": deaths,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &discordgo.MessageEmbed{
+		Title:       "Latest deaths",
+		Description: data,
+		Color:       3447003,
+	}, nil
+}
 
 // Version returns the current running version
 func Version(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
