@@ -1,1 +1,1 @@
-Tiger is currently running version **{{ .version }}**
+Tiger is currently running version **{{ .version }}** built at *{{ .buildDate }}*
