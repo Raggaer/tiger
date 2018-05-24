@@ -35,10 +35,13 @@ func registerHandlers(cfg *config.Config) {
 	handlers.Add("vocation", controllers.ViewVocation)
 	handlers.Add("version", controllers.Version)
 	handlers.Add("uptime", controllers.Uptime)
-	handlers.Add("monster", controllers.ViewMonster)
-	handlers.Add("player", controllers.ViewPlayer)
+	handlers.Add("monster view", controllers.ViewMonster)
+	handlers.Add("monster victims", controllers.ViewMonsterKilledPlayers)
+	handlers.Add("monster loot", controllers.ViewMonsterLoot)
+	handlers.Add("player view", controllers.ViewPlayer)
+	handlers.Add("player deaths", controllers.ViewPlayerDeaths)
 	handlers.Add("deaths", controllers.LatestDeaths)
-	handlers.Add("r", reloadTemplates)
+	handlers.Add("reload templates", reloadTemplates)
 }
 
 // Add registers a new handler

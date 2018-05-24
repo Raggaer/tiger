@@ -5,7 +5,6 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/raggaer/tiger/app/models"
-	"github.com/raggaer/tiger/app/xml"
 )
 
 var monsterCommand = Command{
@@ -34,31 +33,34 @@ type MonsterLoot struct {
 
 // ViewMonster returns information about the given monster
 func ViewMonster(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
-	data := strings.Split(m.Content, ",")
-	if len(data) <= 1 {
-		return monsterCommand.RenderUsage("Unknown option", context, s, m)
-	}
-
 	// Get monster
-	monster, ok := context.Monsters[strings.ToLower(strings.TrimSpace(data[0]))]
+	monster, ok := context.Monsters[strings.ToLower(m.Content)]
 	if !ok {
 		return monsterCommand.RenderUsage("Monster not found", context, s, m)
 	}
 
-	// Switch monster view method
-	switch strings.TrimSpace(data[1]) {
-	case "loot":
-		return viewMonsterLoot(context, s, m, monster)
-	case "info":
-		return viewMonsterInformation(context, s, m, monster)
-	case "deaths":
-		return viewMonsterKilledPlayers(context, s, m, monster)
-	default:
-		return viewMonsterInformation(context, s, m, monster)
+	data, err := context.ExecuteTemplate("monster_info.md", map[string]interface{}{
+		"monster": monster,
+	})
+	if err != nil {
+		return nil, err
 	}
+
+	return &discordgo.MessageEmbed{
+		Title:       "Information about " + monster.Description,
+		Description: data,
+		Color:       3447003,
+	}, nil
 }
 
-func viewMonsterKilledPlayers(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, monster *xml.Monster) (*discordgo.MessageEmbed, error) {
+// ViewMonsterKilledPlayers returns the list of victims od the given monster
+func ViewMonsterKilledPlayers(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
+	// Get monster
+	monster, ok := context.Monsters[strings.ToLower(m.Content)]
+	if !ok {
+		return monsterCommand.RenderUsage("Monster not found", context, s, m)
+	}
+
 	// Load monster deaths
 	deaths, err := models.GetPlayerDeathsByMonster(context.DB, monster, 10)
 	if err != nil {
@@ -80,22 +82,13 @@ func viewMonsterKilledPlayers(context *Context, s *discordgo.Session, m *discord
 	}, nil
 }
 
-func viewMonsterInformation(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, monster *xml.Monster) (*discordgo.MessageEmbed, error) {
-	data, err := context.ExecuteTemplate("monster_info.md", map[string]interface{}{
-		"monster": monster,
-	})
-	if err != nil {
-		return nil, err
+func ViewMonsterLoot(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
+	// Get monster
+	monster, ok := context.Monsters[strings.ToLower(m.Content)]
+	if !ok {
+		return monsterCommand.RenderUsage("Monster not found", context, s, m)
 	}
 
-	return &discordgo.MessageEmbed{
-		Title:       "Information about " + monster.Description,
-		Description: data,
-		Color:       3447003,
-	}, nil
-}
-
-func viewMonsterLoot(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, monster *xml.Monster) (*discordgo.MessageEmbed, error) {
 	// Create loot list
 	loot := []*MonsterLoot{}
 	for _, item := range monster.Loot.Loot {
