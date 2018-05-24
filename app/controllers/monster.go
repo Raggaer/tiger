@@ -39,7 +39,7 @@ func ViewMonster(context *Context, s *discordgo.Session, m *discordgo.MessageCre
 		return monsterCommand.RenderUsage("Monster not found", context, s, m)
 	}
 
-	data, err := context.ExecuteTemplate("monster_info.md", map[string]interface{}{
+	data, err := context.ExecuteTemplate("monster_info", map[string]interface{}{
 		"monster": monster,
 	})
 	if err != nil {
@@ -67,7 +67,7 @@ func ViewMonsterKilledPlayers(context *Context, s *discordgo.Session, m *discord
 		return nil, err
 	}
 
-	data, err := context.ExecuteTemplate("monster_death.md", map[string]interface{}{
+	data, err := context.ExecuteTemplate("monster_death", map[string]interface{}{
 		"deaths":  deaths,
 		"monster": monster,
 	})
@@ -118,7 +118,7 @@ func ViewMonsterLoot(context *Context, s *discordgo.Session, m *discordgo.Messag
 		})
 	}
 
-	data, err := context.ExecuteTemplate("monster_loot.md", map[string]interface{}{
+	data, err := context.ExecuteTemplate("monster_loot", map[string]interface{}{
 		"monster": monster,
 		"loot":    loot,
 	})

@@ -9,9 +9,15 @@ import (
 
 // Config defines the application config file
 type Config struct {
+	Template templateConfig
 	Server   serverConfig
 	Discord  discordConfig
 	Database databaseConfig
+}
+
+type templateConfig struct {
+	Directory string
+	Extension string
 }
 
 type serverConfig struct {

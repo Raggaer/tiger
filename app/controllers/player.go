@@ -34,7 +34,7 @@ func ViewPlayer(context *Context, s *discordgo.Session, m *discordgo.MessageCrea
 		}
 	}
 
-	data, err := context.ExecuteTemplate("player_info.md", map[string]interface{}{
+	data, err := context.ExecuteTemplate("player_info", map[string]interface{}{
 		"vocationName": playerVocation,
 		"player":       player,
 	})
@@ -63,7 +63,7 @@ func ViewPlayerDeaths(context *Context, s *discordgo.Session, m *discordgo.Messa
 		return nil, err
 	}
 
-	data, err := context.ExecuteTemplate("player_death.md", map[string]interface{}{
+	data, err := context.ExecuteTemplate("player_death", map[string]interface{}{
 		"deaths": deaths,
 		"player": player,
 	})

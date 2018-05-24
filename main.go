@@ -46,7 +46,7 @@ func main() {
 	}
 
 	// Load templates
-	tpl, err := loadTemplates("template/")
+	tpl, err := loadTemplates(cfg.Template.Directory, cfg.Template.Extension)
 	if err != nil {
 		log.Fatalf("Unable to load template files: %v", err)
 	}

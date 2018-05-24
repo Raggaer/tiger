@@ -15,7 +15,7 @@ import (
 
 func reloadTemplates(context *controllers.Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
 	// Reload templates
-	tpl, err := loadTemplates("template/")
+	tpl, err := loadTemplates(context.Config.Template.Directory, context.Config.Template.Extension)
 	if err != nil {
 		return nil, err
 	}
@@ -28,14 +28,14 @@ func reloadTemplates(context *controllers.Context, s *discordgo.Session, m *disc
 	}, nil
 }
 
-func loadTemplates(path string) (*template.Template, error) {
+func loadTemplates(path, extension string) (*template.Template, error) {
 	template := template.New("tiger")
 	template.Funcs(templateFuncMap())
 	if err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-		if strings.HasSuffix(info.Name(), ".md") {
+		if strings.HasSuffix(info.Name(), extension) {
 			if _, err := template.ParseFiles(path); err != nil {
 				return err
 			}

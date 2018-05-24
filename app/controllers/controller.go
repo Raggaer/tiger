@@ -41,7 +41,7 @@ type CommandOption struct {
 // ExecuteTemplate executes the given markdown template file
 func (c *Context) ExecuteTemplate(name string, data map[string]interface{}) (string, error) {
 	buff := &bytes.Buffer{}
-	if err := c.Template.ExecuteTemplate(buff, name, data); err != nil {
+	if err := c.Template.ExecuteTemplate(buff, name+c.Config.Template.Extension, data); err != nil {
 		return "", err
 	}
 	return buff.String(), nil

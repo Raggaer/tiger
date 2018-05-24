@@ -23,7 +23,7 @@ func LatestDeaths(context *Context, s *discordgo.Session, m *discordgo.MessageCr
 		return nil, err
 	}
 
-	data, err := context.ExecuteTemplate("server_death.md", map[string]interface{}{
+	data, err := context.ExecuteTemplate("server_death", map[string]interface{}{
 		"deaths": deaths,
 	})
 	if err != nil {
@@ -39,7 +39,7 @@ func LatestDeaths(context *Context, s *discordgo.Session, m *discordgo.MessageCr
 
 // Version returns the current running version
 func Version(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
-	data, err := context.ExecuteTemplate("version.md", map[string]interface{}{
+	data, err := context.ExecuteTemplate("version", map[string]interface{}{
 		"version":   ApplicationVersion,
 		"buildDate": BuildDate,
 	})
@@ -56,7 +56,7 @@ func Version(context *Context, s *discordgo.Session, m *discordgo.MessageCreate)
 
 // Uptime returns the current bot uptime
 func Uptime(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
-	data, err := context.ExecuteTemplate("uptime.md", map[string]interface{}{
+	data, err := context.ExecuteTemplate("uptime", map[string]interface{}{
 		"start":   context.Start,
 		"current": time.Now(),
 	})

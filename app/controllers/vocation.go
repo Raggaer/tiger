@@ -19,7 +19,7 @@ func ViewVocation(context *Context, s *discordgo.Session, m *discordgo.MessageCr
 		return vocationCommand.RenderUsage("Vocation not found", context, s, m)
 	}
 
-	data, err := context.ExecuteTemplate("vocation_info.md", map[string]interface{}{
+	data, err := context.ExecuteTemplate("vocation_info", map[string]interface{}{
 		"voc": voc,
 	})
 	if err != nil {

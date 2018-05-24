@@ -1,3 +1,7 @@
+[template]
+directory = "template/"
+extension = ".tiger"
+
 [server]
 path = ""
 
