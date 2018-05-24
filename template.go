@@ -14,6 +14,17 @@ import (
 )
 
 func reloadTemplates(context *controllers.Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
+	// Check if user is administrator
+	perms, err := s.State.UserChannelPermissions(m.Author.ID, m.ChannelID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if user has administrator permission
+	if perms&discordgo.PermissionAdministrator <= 0 {
+		return nil, nil
+	}
+
 	// Reload templates
 	tpl, err := loadTemplates(context.Config.Template.Directory, context.Config.Template.Extension)
 	if err != nil {
