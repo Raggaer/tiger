@@ -6,10 +6,18 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+const (
+	// ApplicationVersion defines the running version
+	ApplicationVersion = ""
+
+	// BuildDate date where the application was built
+	BuildDate = ""
+)
+
 // Version returns the current running version
 func Version(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) error {
 	data, err := context.ExecuteTemplate("version.md", map[string]interface{}{
-		"version": "BETA",
+		"version": ApplicationVersion,
 	})
 	if err != nil {
 		return err
