@@ -48,7 +48,7 @@ func (c *Context) ExecuteTemplate(name string, data map[string]interface{}) (str
 }
 
 // RenderUsage sends a message with the command usage
-func (c *Command) RenderUsage(title string, ctx *Context, s *discordgo.Session, m *discordgo.MessageCreate) error {
+func (c *Command) RenderUsage(title string, ctx *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
 	msg := strings.Builder{}
 	msg.WriteString(c.Description)
 	msg.WriteString("\r\nCommand usage: `" + ctx.Config.Discord.Prefix + c.Usage + "`\r\n")
@@ -65,11 +65,10 @@ func (c *Command) RenderUsage(title string, ctx *Context, s *discordgo.Session, 
 	}
 
 	// Send usage message
-	_, err := s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
+	return &discordgo.MessageEmbed{
 		Color:       3447003,
 		Title:       title,
 		Description: msg.String(),
 		Fields:      fields,
-	})
-	return err
+	}, nil
 }

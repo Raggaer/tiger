@@ -18,7 +18,7 @@ var viewPlayerCommand = Command{
 }
 
 // ViewPlayer views the given server character
-func ViewPlayer(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) error {
+func ViewPlayer(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
 	data := strings.Split(m.Content, ",")
 	if len(data) <= 1 {
 		return viewPlayerCommand.RenderUsage("Unknown option", context, s, m)
@@ -40,26 +40,29 @@ func ViewPlayer(context *Context, s *discordgo.Session, m *discordgo.MessageCrea
 	}
 }
 
-func viewPlayerDeaths(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, player *models.Player) error {
+func viewPlayerDeaths(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, player *models.Player) (*discordgo.MessageEmbed, error) {
 	// Retrieve player deaths
 	deaths, err := models.GetPlayerDeaths(context.DB, player, 10)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	data, err := context.ExecuteTemplate("player_death.md", map[string]interface{}{
 		"deaths": deaths,
 		"player": player,
 	})
-	_, err = s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
+	if err != nil {
+		return nil, err
+	}
+
+	return &discordgo.MessageEmbed{
 		Title:       "Latest " + player.Name + " deaths",
-		Color:       3447003,
 		Description: data,
-	})
-	return nil
+		Color:       3447003,
+	}, nil
 }
 
-func viewPlayerInformation(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, player *models.Player) error {
+func viewPlayerInformation(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, player *models.Player) (*discordgo.MessageEmbed, error) {
 	// Retrieve player vocation
 	playerVocation := "No vocation"
 	for _, v := range context.Vocations {
@@ -73,10 +76,13 @@ func viewPlayerInformation(context *Context, s *discordgo.Session, m *discordgo.
 		"vocationName": playerVocation,
 		"player":       player,
 	})
-	_, err = s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
+	if err != nil {
+		return nil, err
+	}
+
+	return &discordgo.MessageEmbed{
 		Title:       "View player " + player.Name,
-		Color:       3447003,
 		Description: data,
-	})
-	return err
+		Color:       3447003,
+	}, nil
 }

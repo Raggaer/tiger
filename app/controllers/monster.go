@@ -33,7 +33,7 @@ type MonsterLoot struct {
 }
 
 // ViewMonster returns information about the given monster
-func ViewMonster(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) error {
+func ViewMonster(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
 	data := strings.Split(m.Content, ",")
 	if len(data) <= 1 {
 		return monsterCommand.RenderUsage("Unknown option", context, s, m)
@@ -58,11 +58,11 @@ func ViewMonster(context *Context, s *discordgo.Session, m *discordgo.MessageCre
 	}
 }
 
-func viewMonsterKilledPlayers(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, monster *xml.Monster) error {
+func viewMonsterKilledPlayers(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, monster *xml.Monster) (*discordgo.MessageEmbed, error) {
 	// Load monster deaths
 	deaths, err := models.GetPlayerDeathsByMonster(context.DB, monster, 10)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	data, err := context.ExecuteTemplate("monster_death.md", map[string]interface{}{
@@ -70,32 +70,32 @@ func viewMonsterKilledPlayers(context *Context, s *discordgo.Session, m *discord
 		"monster": monster,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
-		Color:       3447003,
+
+	return &discordgo.MessageEmbed{
 		Title:       "Players killed by " + monster.Description,
 		Description: data,
-	})
-	return err
+		Color:       3447003,
+	}, nil
 }
 
-func viewMonsterInformation(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, monster *xml.Monster) error {
+func viewMonsterInformation(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, monster *xml.Monster) (*discordgo.MessageEmbed, error) {
 	data, err := context.ExecuteTemplate("monster_info.md", map[string]interface{}{
 		"monster": monster,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
-		Color:       3447003,
+
+	return &discordgo.MessageEmbed{
 		Title:       "Information about " + monster.Description,
 		Description: data,
-	})
-	return err
+		Color:       3447003,
+	}, nil
 }
 
-func viewMonsterLoot(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, monster *xml.Monster) error {
+func viewMonsterLoot(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, monster *xml.Monster) (*discordgo.MessageEmbed, error) {
 	// Create loot list
 	loot := []*MonsterLoot{}
 	for _, item := range monster.Loot.Loot {
@@ -130,12 +130,12 @@ func viewMonsterLoot(context *Context, s *discordgo.Session, m *discordgo.Messag
 		"loot":    loot,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
-		Color:       3447003,
+
+	return &discordgo.MessageEmbed{
 		Title:       monster.Name + " loot",
 		Description: data,
-	})
-	return err
+		Color:       3447003,
+	}, nil
 }

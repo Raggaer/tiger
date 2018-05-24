@@ -8,7 +8,38 @@ import (
 	"strings"
 	"text/template"
 	"time"
+
+	"github.com/bwmarrin/discordgo"
+	"github.com/raggaer/tiger/app/controllers"
 )
+
+func reloadTemplates(context *controllers.Context, s *discordgo.Session, m *discordgo.MessageCreate) error {
+	// Send notification message
+	msg, err := s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
+		Title:       "Reload templates",
+		Description: "Reloading templates...",
+		Color:       3447003,
+	})
+	if err != nil {
+		return err
+	}
+
+	// Reload templates in a new goroutine
+	go func(context *controllers.Context, msg *discordgo.Message, s *discordgo.Session) {
+		tpl, err := loadTemplates("template/")
+		if err != nil {
+			return
+		}
+		s.ChannelMessageEditEmbed(msg.ChannelID, msg.ID, &discordgo.MessageEmbed{
+			Title:       "Reload templates",
+			Description: "Templates reloaded",
+			Color:       3447003,
+		})
+		context.Template = tpl
+	}(context, msg, s)
+
+	return nil
+}
 
 func loadTemplates(path string) (*template.Template, error) {
 	template := template.New("tiger")

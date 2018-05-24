@@ -12,7 +12,7 @@ var vocationCommand = Command{
 }
 
 // ViewVocation sends information about the given vocation
-func ViewVocation(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) error {
+func ViewVocation(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
 	// Retrieve vocation by name
 	voc, ok := context.Vocations[strings.ToLower(m.Content)]
 	if !ok {
@@ -23,12 +23,12 @@ func ViewVocation(context *Context, s *discordgo.Session, m *discordgo.MessageCr
 		"voc": voc,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
-		Color:       3447003,
+
+	return &discordgo.MessageEmbed{
 		Title:       "Vocation " + voc.Name,
 		Description: data,
-	})
-	return err
+		Color:       3447003,
+	}, nil
 }

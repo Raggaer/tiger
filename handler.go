@@ -37,6 +37,7 @@ func registerHandlers(cfg *config.Config) {
 	handlers.Add("uptime", controllers.Uptime)
 	handlers.Add("monster", controllers.ViewMonster)
 	handlers.Add("player", controllers.ViewPlayer)
+	handlers.Add("r", reloadTemplates)
 }
 
 // Add registers a new handler
@@ -73,9 +74,8 @@ func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList, db *sql.DB, tpl
 		// Loop all registered handlers
 		for _, h := range handlers.list {
 			if strings.HasPrefix(m.Content, h.Prefix) {
-
 				// Check if we can execute the handler
-				handlerFunc, ok := h.Handler.(func(*controllers.Context, *discordgo.Session, *discordgo.MessageCreate) error)
+				handlerFunc, ok := h.Handler.(func(*controllers.Context, *discordgo.Session, *discordgo.MessageCreate) (*discordgo.MessageEmbed, error))
 				if !ok {
 					continue
 				}
@@ -83,9 +83,26 @@ func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList, db *sql.DB, tpl
 				// Remove prefix from content
 				m.Content = strings.TrimSpace(strings.TrimPrefix(m.Content, h.Prefix))
 
+				// Create working message
+				workMessage, err := s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
+					Color:       3447003,
+					Title:       "Working",
+					Description: "Working...",
+				})
+				if err != nil {
+					log.Fatalf("Unable to send working message: %v", err)
+				}
+
 				// Execute handler
-				if err := handlerFunc(&ctx, s, m); err != nil {
+				data, err := handlerFunc(&ctx, s, m)
+				if err != nil {
 					log.Printf("Unable to execute handlerfunc %s: %v", h.Prefix, err)
+					break
+				}
+
+				if data != nil {
+					// Edit working message
+					s.ChannelMessageEditEmbed(workMessage.ChannelID, workMessage.ID, data)
 				}
 				break
 			}

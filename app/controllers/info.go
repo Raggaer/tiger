@@ -15,37 +15,37 @@ var (
 )
 
 // Version returns the current running version
-func Version(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) error {
+func Version(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
 	data, err := context.ExecuteTemplate("version.md", map[string]interface{}{
 		"version":   ApplicationVersion,
 		"buildDate": BuildDate,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
-		Color:       3447003,
+
+	return &discordgo.MessageEmbed{
 		Title:       "Version",
 		Description: data,
-	})
-	return err
+		Color:       3447003,
+	}, nil
 }
 
 // Uptime returns the current bot uptime
-func Uptime(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) error {
+func Uptime(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
 	data, err := context.ExecuteTemplate("uptime.md", map[string]interface{}{
 		"start":   context.Start,
 		"current": time.Now(),
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
-		Color:       3447003,
+
+	return &discordgo.MessageEmbed{
 		Title:       "Uptime",
 		Description: data,
-	})
-	return err
+		Color:       3447003,
+	}, nil
 }
 
 func uptimeMessage(day, hour, min, sec int) string {
