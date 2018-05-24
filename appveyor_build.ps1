@@ -23,7 +23,7 @@ echo "Building for Windows amd64"
 $env:GOOS = "windows"
 $env:GOARCH = "amd64"
 
-$winCommand = 'go build -o buildOutput\tiger_win_amd64.exe -ldflags "-X github.com/raggaer/tiger/app/controllers.ApplicationVersion=$version -X github.com/raggaer/tiger/app/controllers.BuildDate=$date"'
+$winCommand = 'go build -o buildOutput\tiger_win_amd64.exe'
 
 iex $winCommand
 
@@ -31,11 +31,11 @@ echo "Building for Linux amd64"
 $env:GOOS = "linux"
 $env:GOARCH = "amd64"
 
-$linuxCommand = 'go build -o buildOutput\tiger_linux_amd64.exe -ldflags "-X github.com/raggaer/tiger/app/controllers.ApplicationVersion=$version -X github.com/raggaer/tiger/app/controllers.BuildDate=$date"'
+$linuxCommand = 'go build -o buildOutput\tiger_linux_amd64.exe'
 
 iex $linuxCommand
 
-$linuxCommand = 'go build -o buildOutput\tiger_linux_arm64.exe -ldflags "-X github.com/raggaer/tiger/app/controllers.ApplicationVersion=$version -X github.com/raggaer/tiger/app/controllers.BuildDate=$date"'
+$linuxCommand = 'go build -o buildOutput\tiger_linux_arm64.exe'
 
 echo "Building for Linux arm64"
 $env:GOOS = "linux"
