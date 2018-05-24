@@ -45,8 +45,14 @@ func main() {
 		log.Fatalf("Unable to create discord session: %v", err)
 	}
 
+	// Load templates
+	tpl, err := loadTemplates("template/")
+	if err != nil {
+		log.Fatalf("Unable to load template files: %v", err)
+	}
+
 	// Register mesasge handler
-	dg.AddHandler(handleCreateMessage(cfg, tasks, db))
+	dg.AddHandler(handleCreateMessage(cfg, tasks, db, tpl))
 
 	// Open discord session
 	if err := dg.Open(); err != nil {

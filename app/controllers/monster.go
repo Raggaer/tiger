@@ -1,9 +1,7 @@
 package controllers
 
 import (
-	"strconv"
 	"strings"
-	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/raggaer/tiger/app/models"
@@ -26,6 +24,12 @@ var monsterCommand = Command{
 			Description: "Returns the last 10 players killed by the monster",
 		},
 	},
+}
+
+// MonsterLoot defines a list of monster loot
+type MonsterLoot struct {
+	Item   string
+	Chance float64
 }
 
 // ViewMonster returns information about the given monster
@@ -55,51 +59,45 @@ func ViewMonster(context *Context, s *discordgo.Session, m *discordgo.MessageCre
 }
 
 func viewMonsterKilledPlayers(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, monster *xml.Monster) error {
+	// Load monster deaths
 	deaths, err := models.GetPlayerDeathsByMonster(context.DB, monster, 10)
 	if err != nil {
 		return err
 	}
 
-	// Render deaths message
-	msg := strings.Builder{}
-	if len(deaths) <= 0 {
-		msg.WriteString("\r\nNoone")
-	} else {
-		for i, d := range deaths {
-			deathTime := timeAgo(time.Unix(d.Time, 0), time.Now())
-			msg.WriteString("\r\n" + strconv.Itoa(i+1) + ". Killed **" + d.Player.Name + "** at level **" + strconv.Itoa(d.Level) + "** - *" + deathTime + " ago*")
-		}
+	data, err := context.ExecuteTemplate("monster_death.md", map[string]interface{}{
+		"deaths":  deaths,
+		"monster": monster,
+	})
+	if err != nil {
+		return err
 	}
-
 	_, err = s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
 		Color:       3447003,
 		Title:       "Players killed by " + monster.Description,
-		Description: msg.String(),
+		Description: data,
 	})
 	return err
 }
 
 func viewMonsterInformation(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, monster *xml.Monster) error {
-	msg := strings.Builder{}
-	msg.WriteString("**You view " + monster.Description + "** \r\n \r\n")
-	msg.WriteString("- **Experience**: " + strconv.Itoa(monster.Experience) + "\r\n")
-	msg.WriteString("- **Speed**: " + strconv.Itoa(monster.Speed) + " \r\n")
-	msg.WriteString("- **Health**: " + strconv.Itoa(monster.Health.Now) + " \r\n \r\n")
-	for _, attack := range monster.Attacks.Attacks {
-		msg.WriteString("- **Attack**: " + attack.Name + " (" + strconv.Itoa(attack.Min) + ", " + strconv.Itoa(attack.Max) + ")\r\n")
+	data, err := context.ExecuteTemplate("monster_info.md", map[string]interface{}{
+		"monster": monster,
+	})
+	if err != nil {
+		return err
 	}
-
-	// Send information message
-	_, err := s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
+	_, err = s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
 		Color:       3447003,
-		Title:       monster.Name + " information",
-		Description: msg.String(),
+		Title:       "Information about " + monster.Description,
+		Description: data,
 	})
 	return err
 }
 
 func viewMonsterLoot(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, monster *xml.Monster) error {
-	msg := strings.Builder{}
+	// Create loot list
+	loot := []*MonsterLoot{}
 	for _, item := range monster.Loot.Loot {
 
 		// Calculate item chance percentage
@@ -114,18 +112,30 @@ func viewMonsterLoot(context *Context, s *discordgo.Session, m *discordgo.Messag
 			if !ok {
 				continue
 			}
-			msg.WriteString("\r\n- **" + i.Name + "** - " + strconv.FormatFloat(chance, 'f', 2, 64) + "%")
+			loot = append(loot, &MonsterLoot{
+				Item:   i.Name,
+				Chance: chance,
+			})
 			continue
 		}
 
-		msg.WriteString("\r\n- **" + item.Name + "** - " + strconv.FormatFloat(chance, 'f', 2, 64) + "%")
+		loot = append(loot, &MonsterLoot{
+			Item:   item.Name,
+			Chance: chance,
+		})
 	}
 
-	// Send loot message
-	_, err := s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
+	data, err := context.ExecuteTemplate("monster_loot.md", map[string]interface{}{
+		"monster": monster,
+		"loot":    loot,
+	})
+	if err != nil {
+		return err
+	}
+	_, err = s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
 		Color:       3447003,
 		Title:       monster.Name + " loot",
-		Description: msg.String(),
+		Description: data,
 	})
 	return err
 }

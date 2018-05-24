@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -9,32 +8,33 @@ import (
 
 // Version returns the current running version
 func Version(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) error {
-	_, err := s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
+	data, err := context.ExecuteTemplate("version.md", map[string]interface{}{
+		"version": "BETA",
+	})
+	if err != nil {
+		return err
+	}
+	_, err = s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
 		Color:       3447003,
-		Title:       "Tiger version",
-		Description: "Tiger is currently running version **BETA**",
+		Title:       "Version",
+		Description: data,
 	})
 	return err
 }
 
 // Uptime returns the current bot uptime
 func Uptime(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) error {
-	// Retrieve time diff
-	_, _, days, hours, minutes, seconds := diff(context.Start, time.Now())
-
-	// Retrieve uptime message
-	msg := uptimeMessage(days, hours, minutes, seconds)
-
-	_, err := s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
-		Color: 3447003,
-		Title: "Tiger uptime",
-		Description: fmt.Sprintf(
-			"Tiger has been running for **"+msg+"**",
-			days,
-			hours,
-			minutes,
-			seconds,
-		),
+	data, err := context.ExecuteTemplate("uptime.md", map[string]interface{}{
+		"start":   context.Start,
+		"current": time.Now(),
+	})
+	if err != nil {
+		return err
+	}
+	_, err = s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
+		Color:       3447003,
+		Title:       "Uptime",
+		Description: data,
 	})
 	return err
 }

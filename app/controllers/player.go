@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -34,9 +33,30 @@ func ViewPlayer(context *Context, s *discordgo.Session, m *discordgo.MessageCrea
 	switch strings.TrimSpace(data[1]) {
 	case "info":
 		return viewPlayerInformation(context, s, m, player)
+	case "deaths":
+		return viewPlayerDeaths(context, s, m, player)
 	default:
 		return viewPlayerInformation(context, s, m, player)
 	}
+}
+
+func viewPlayerDeaths(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, player *models.Player) error {
+	// Retrieve player deaths
+	deaths, err := models.GetPlayerDeaths(context.DB, player, 10)
+	if err != nil {
+		return err
+	}
+
+	data, err := context.ExecuteTemplate("player_death.md", map[string]interface{}{
+		"deaths": deaths,
+		"player": player,
+	})
+	_, err = s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
+		Title:       "Latest " + player.Name + " deaths",
+		Color:       3447003,
+		Description: data,
+	})
+	return nil
 }
 
 func viewPlayerInformation(context *Context, s *discordgo.Session, m *discordgo.MessageCreate, player *models.Player) error {
@@ -49,36 +69,14 @@ func viewPlayerInformation(context *Context, s *discordgo.Session, m *discordgo.
 		}
 	}
 
-	// Create message
-	skillsMessage := strings.Builder{}
-	skillsMessage.WriteString("- **Magic**: " + strconv.Itoa(player.MagicLevel))
-	skillsMessage.WriteString("\r\n- **Fist**: " + strconv.Itoa(player.SkillFist))
-	skillsMessage.WriteString("\r\n- **Club**: " + strconv.Itoa(player.SkillClub))
-	skillsMessage.WriteString("\r\n- **Sword**: " + strconv.Itoa(player.SkillSword))
-	skillsMessage.WriteString("\r\n- **Axe**: " + strconv.Itoa(player.SkillAxe))
-	skillsMessage.WriteString("\r\n- **Distance**: " + strconv.Itoa(player.SkillDist))
-	skillsMessage.WriteString("\r\n- **Shielding**: " + strconv.Itoa(player.SkillShielding))
-	skillsMessage.WriteString("\r\n- **Fishing**: " + strconv.Itoa(player.SkillFishing))
-	fields := []*discordgo.MessageEmbedField{
-		{
-			Name:  "Vocation",
-			Value: playerVocation,
-		},
-		{
-			Name:  "Level",
-			Value: "Currently level **" + strconv.Itoa(player.Level) + "** with `" + strconv.FormatInt(player.Experience, 10) + "` experience",
-		},
-		{
-			Name:  "Skills",
-			Value: skillsMessage.String(),
-		},
-	}
-
-	// Send message
-	_, err := s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
-		Title:  "View player " + player.Name,
-		Color:  3447003,
-		Fields: fields,
+	data, err := context.ExecuteTemplate("player_info.md", map[string]interface{}{
+		"vocationName": playerVocation,
+		"player":       player,
+	})
+	_, err = s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
+		Title:       "View player " + player.Name,
+		Color:       3447003,
+		Description: data,
 	})
 	return err
 }

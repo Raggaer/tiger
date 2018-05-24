@@ -1,0 +1,1 @@
+Tiger has been running for {{ uptimeMessage .start .current }}

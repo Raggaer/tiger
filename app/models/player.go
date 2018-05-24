@@ -69,6 +69,7 @@ func GetPlayerByName(db *sql.DB, name string) (*Player, error) {
 	player := Player{}
 	row := db.QueryRow(`
 		SELECT 
+			id,
 			name,
 			group_id,
 			account_id,
@@ -95,6 +96,7 @@ func GetPlayerByName(db *sql.DB, name string) (*Player, error) {
 		FROM players WHERE LOWER(name) = ?
 	`, strings.ToLower(name))
 	if err := row.Scan(
+		&player.ID,
 		&player.Name,
 		&player.GroupID,
 		&player.AccountID,

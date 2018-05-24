@@ -26,7 +26,7 @@ func GetPlayerDeaths(db *sql.DB, p *Player, limit int) ([]*PlayerDeath, error) {
 	deaths := []*PlayerDeath{}
 
 	// Retrieve deaths using monster description
-	rows, err := db.Query("SELECT most_damage_by, time, level FROM player_deaths WHERE player_id = ? ORDER BY time DESC LIMIT ?", p.ID, limit)
+	rows, err := db.Query("SELECT killed_by, mostdamage_by, time, level FROM player_deaths WHERE player_id = ? ORDER BY time DESC LIMIT ?", p.ID, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func GetPlayerDeaths(db *sql.DB, p *Player, limit int) ([]*PlayerDeath, error) {
 	// Parse deaths
 	for rows.Next() {
 		death := &PlayerDeath{}
-		if err := rows.Scan(&death.MostDamageBy, &death.Time, &death.Level); err != nil {
+		if err := rows.Scan(&death.KilledBy, &death.MostDamageBy, &death.Time, &death.Level); err != nil {
 			return nil, err
 		}
 		deaths = append(deaths, death)
