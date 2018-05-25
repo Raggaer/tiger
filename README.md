@@ -47,3 +47,7 @@ schema = ""
 ```
 
 Rename `config.toml.sample` to `config.toml` and execute **tiger**
+
+## License
+
+**Tiger** is licensed under the **MIT** license
