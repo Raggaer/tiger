@@ -74,7 +74,7 @@ func GetPlayerDeathsByMonster(db *sql.DB, m *xml.Monster, limit int) ([]*PlayerD
 	deaths := []*PlayerDeath{}
 
 	// Retrieve deaths using monster description
-	rows, err := db.Query("SELECT a.name, b.time, b.level FROM players a, player_deaths b WHERE LOWER(b.killed_by) = ? ORDER BY b.time DESC LIMIT ?", strings.ToLower(m.Description), limit)
+	rows, err := db.Query("SELECT a.name, b.time, b.level FROM players a, player_deaths b WHERE LOWER(b.killed_by) = ? AND a.id = b.player_id ORDER BY b.time DESC LIMIT ?", strings.ToLower(m.Description), limit)
 	if err != nil {
 		return nil, err
 	}
