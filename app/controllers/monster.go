@@ -8,10 +8,10 @@ import (
 )
 
 var monsterCommand = Command{
-	Usage: "monster Name, option",
+	Usage: "monster option name",
 	Options: []CommandOption{
 		{
-			Name:        "info",
+			Name:        "view",
 			Description: "Returns basic information about the monster",
 		},
 		{
@@ -19,7 +19,7 @@ var monsterCommand = Command{
 			Description: "Returns the loot table of the monster",
 		},
 		{
-			Name:        "deaths",
+			Name:        "victims",
 			Description: "Returns the last 10 players killed by the monster",
 		},
 	},

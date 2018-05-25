@@ -8,11 +8,15 @@ import (
 )
 
 var viewPlayerCommand = Command{
-	Usage: "player Name, option",
+	Usage: "player option name",
 	Options: []CommandOption{
 		{
-			Name:        "info",
+			Name:        "view",
 			Description: "Shows the basic information about a character",
+		},
+		{
+			Name:        "deaths",
+			Description: "Latest character deaths",
 		},
 	},
 }

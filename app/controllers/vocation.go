@@ -7,7 +7,7 @@ import (
 )
 
 var vocationCommand = Command{
-	Usage:       "vocation Name",
+	Usage:       "vocation name",
 	Description: "Provides information about server vocations",
 }
 
