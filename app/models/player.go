@@ -64,6 +64,27 @@ type Player struct {
 	Conditions           []byte
 }
 
+// GetTopPlayersByExperience retrieves top players by experience field
+func GetTopPlayersByExperience(db *sql.DB, limit int) ([]*Player, error) {
+	players := []*Player{}
+
+	rows, err := db.Query("SELECT name, level, experience FROM players ORDER BY experience DESC LIMIT ?", limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		p := Player{}
+		if err := rows.Scan(&p.Name, &p.Level, &p.Experience); err != nil {
+			return nil, err
+		}
+		players = append(players, &p)
+	}
+
+	return players, nil
+}
+
 // GetPlayerByName retrieves a character by the name
 func GetPlayerByName(db *sql.DB, name string) (*Player, error) {
 	player := Player{}
