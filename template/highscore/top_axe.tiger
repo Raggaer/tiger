@@ -1,0 +1,8 @@
+{{- if not .players }}
+No players
+{{- else }}
+{{ range $i, $element := .players }}
+{{- $index := sum $i 1 -}}
+{{ $index }}. **{{ $element.Name }}** with skill level **{{ $element.SkillAxe }}**
+{{ end }}
+{{- end }}

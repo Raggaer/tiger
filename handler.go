@@ -32,6 +32,12 @@ func registerHandlers(cfg *config.Config) {
 	}
 
 	// Register handlers
+	handlers.Add("top fish", controllers.ViewTopPlayersSkillFishing)
+	handlers.Add("top shield", controllers.ViewTopPlayersSkillShielding)
+	handlers.Add("top dist", controllers.ViewTopPlayersSkillDist)
+	handlers.Add("top axe", controllers.ViewTopPlayersSkillAxe)
+	handlers.Add("top sword", controllers.ViewTopPlayersSkillSword)
+	handlers.Add("top club", controllers.ViewTopPlayersSkillClub)
 	handlers.Add("top fist", controllers.ViewTopPlayersSkillFist)
 	handlers.Add("top magic", controllers.ViewTopPlayersMagicLevel)
 	handlers.Add("top experience", controllers.ViewTopPlayersExperience)

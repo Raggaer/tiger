@@ -64,6 +64,132 @@ type Player struct {
 	Conditions           []byte
 }
 
+// GetTopPlayersBySkillFishing retrieves top players by skill fishing field
+func GetTopPlayersBySkillFishing(db *sql.DB, limit int) ([]*Player, error) {
+	players := []*Player{}
+
+	rows, err := db.Query("SELECT name, skill_fishing FROM players ORDER BY skill_fishing DESC LIMIT ?", limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		p := Player{}
+		if err := rows.Scan(&p.Name, &p.SkillFishing); err != nil {
+			return nil, err
+		}
+		players = append(players, &p)
+	}
+
+	return players, nil
+}
+
+// GetTopPlayersBySkillShield retrieves top players by skill shield field
+func GetTopPlayersBySkillShield(db *sql.DB, limit int) ([]*Player, error) {
+	players := []*Player{}
+
+	rows, err := db.Query("SELECT name, skill_shielding FROM players ORDER BY skill_shielding DESC LIMIT ?", limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		p := Player{}
+		if err := rows.Scan(&p.Name, &p.SkillShielding); err != nil {
+			return nil, err
+		}
+		players = append(players, &p)
+	}
+
+	return players, nil
+}
+
+// GetTopPlayersBySkillDist retrieves top players by skill dist field
+func GetTopPlayersBySkillDist(db *sql.DB, limit int) ([]*Player, error) {
+	players := []*Player{}
+
+	rows, err := db.Query("SELECT name, skill_dist FROM players ORDER BY skill_dist DESC LIMIT ?", limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		p := Player{}
+		if err := rows.Scan(&p.Name, &p.SkillDist); err != nil {
+			return nil, err
+		}
+		players = append(players, &p)
+	}
+
+	return players, nil
+}
+
+// GetTopPlayersBySkillAxe retrieves top players by skill axe field
+func GetTopPlayersBySkillAxe(db *sql.DB, limit int) ([]*Player, error) {
+	players := []*Player{}
+
+	rows, err := db.Query("SELECT name, skill_axe FROM players ORDER BY skill_axe DESC LIMIT ?", limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		p := Player{}
+		if err := rows.Scan(&p.Name, &p.SkillAxe); err != nil {
+			return nil, err
+		}
+		players = append(players, &p)
+	}
+
+	return players, nil
+}
+
+// GetTopPlayersBySkillSword retrieves top players by skill sword field
+func GetTopPlayersBySkillSword(db *sql.DB, limit int) ([]*Player, error) {
+	players := []*Player{}
+
+	rows, err := db.Query("SELECT name, skill_sword FROM players ORDER BY skill_sword DESC LIMIT ?", limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		p := Player{}
+		if err := rows.Scan(&p.Name, &p.SkillSword); err != nil {
+			return nil, err
+		}
+		players = append(players, &p)
+	}
+
+	return players, nil
+}
+
+// GetTopPlayersBySkillClub retrieves top players by skill club field
+func GetTopPlayersBySkillClub(db *sql.DB, limit int) ([]*Player, error) {
+	players := []*Player{}
+
+	rows, err := db.Query("SELECT name, skill_club FROM players ORDER BY skill_club DESC LIMIT ?", limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		p := Player{}
+		if err := rows.Scan(&p.Name, &p.SkillClub); err != nil {
+			return nil, err
+		}
+		players = append(players, &p)
+	}
+
+	return players, nil
+}
+
 // GetTopPlayersBySkillFist retrieves top players by skill fist field
 func GetTopPlayersBySkillFist(db *sql.DB, limit int) ([]*Player, error) {
 	players := []*Player{}
