@@ -20,6 +20,30 @@ var highscoreCommand = Command{
 			Name:        "fist",
 			Description: "Returns server highest fist fighting players",
 		},
+		{
+			Name:        "club",
+			Description: "Returns server highest club fighting players",
+		},
+		{
+			Name:        "axe",
+			Description: "Returns server highest axe fighting players",
+		},
+		{
+			Name:        "sword",
+			Description: "Returns server highest sword fighting players",
+		},
+		{
+			Name:        "dist",
+			Description: "Returns server highest distance fighting players",
+		},
+		{
+			Name:        "shield",
+			Description: "Returns server highest shielding players",
+		},
+		{
+			Name:        "fish",
+			Description: "Returns server highest fishing players",
+		},
 	},
 }
 
