@@ -104,7 +104,10 @@ func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList, db *sql.DB, tpl
 					break
 				}
 
-				if data != nil {
+				// Delete message if there is nothing to show
+				if data == nil {
+					s.ChannelMessageDelete(workMessage.ChannelID, workMessage.ID)
+				} else {
 					// Edit working message
 					s.ChannelMessageEditEmbed(workMessage.ChannelID, workMessage.ID, data)
 				}
