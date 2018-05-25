@@ -85,6 +85,27 @@ func GetTopPlayersByExperience(db *sql.DB, limit int) ([]*Player, error) {
 	return players, nil
 }
 
+// GetTopPlayersByMagicLevel retrieves top players by maglevel field
+func GetTopPlayersByMagicLevel(db *sql.DB, limit int) ([]*Player, error) {
+	players := []*Player{}
+
+	rows, err := db.Query("SELECT name, maglevel FROM players ORDER BY maglevel DESC LIMIT ?", limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		p := Player{}
+		if err := rows.Scan(&p.Name, &p.MagicLevel); err != nil {
+			return nil, err
+		}
+		players = append(players, &p)
+	}
+
+	return players, nil
+}
+
 // GetPlayerByName retrieves a character by the name
 func GetPlayerByName(db *sql.DB, name string) (*Player, error) {
 	player := Player{}
