@@ -64,6 +64,27 @@ type Player struct {
 	Conditions           []byte
 }
 
+// GetTopPlayersBySkillFist retrieves top players by skill fist field
+func GetTopPlayersBySkillFist(db *sql.DB, limit int) ([]*Player, error) {
+	players := []*Player{}
+
+	rows, err := db.Query("SELECT name, skill_fist FROM players ORDER BY skill_fist DESC LIMIT ?", limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		p := Player{}
+		if err := rows.Scan(&p.Name, &p.SkillFist); err != nil {
+			return nil, err
+		}
+		players = append(players, &p)
+	}
+
+	return players, nil
+}
+
 // GetTopPlayersByExperience retrieves top players by experience field
 func GetTopPlayersByExperience(db *sql.DB, limit int) ([]*Player, error) {
 	players := []*Player{}
