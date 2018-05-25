@@ -82,6 +82,7 @@ func ViewMonsterKilledPlayers(context *Context, s *discordgo.Session, m *discord
 	}, nil
 }
 
+// ViewMonsterLoot returns the list of items a monster can give
 func ViewMonsterLoot(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
 	// Get monster
 	monster, ok := context.Monsters[strings.ToLower(m.Content)]
