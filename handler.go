@@ -32,6 +32,7 @@ func registerHandlers(cfg *config.Config) {
 	}
 
 	// Register handlers
+	handlers.Add("top experience", controllers.ViewTopPlayersExperience)
 	handlers.Add("vocation", controllers.ViewVocation)
 	handlers.Add("version", controllers.Version)
 	handlers.Add("uptime", controllers.Uptime)
