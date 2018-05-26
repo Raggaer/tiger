@@ -84,6 +84,22 @@ func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList, db *sql.DB, tpl
 			return
 		}
 
+		// Check if valid channel
+		channelName, err := getChannelName(s, m.ChannelID)
+		if err != nil {
+			log.Fatalf("Unable to retrieve channel name: %v", err)
+		}
+		validChannel := false
+		for _, n := range cfg.Discord.Channels {
+			if n == channelName {
+				validChannel = true
+				break
+			}
+		}
+		if !validChannel {
+			return
+		}
+
 		// Loop all registered handlers
 		for _, h := range handlers.list {
 			if strings.HasPrefix(m.Content, h.Prefix) {

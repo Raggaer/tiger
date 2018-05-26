@@ -9,3 +9,4 @@ path = ""
 prefix = "!tiger "
 token = ""
 status = ""
+channels = ["test", "bot-test"]
