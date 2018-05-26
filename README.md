@@ -10,6 +10,7 @@ Discord bot for Open Tibia Servers
 - Vocation lookup (information)
 - Player lookup (information)
 - Latest server deaths
+- Highscores
 - Solid template system
 
 ## Installing
