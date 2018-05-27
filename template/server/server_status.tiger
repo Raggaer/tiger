@@ -1,5 +1,5 @@
 {{- if .status.Online }}
-Server is **Online**
+Server is **Online**. Uptime **{{ .status.UptimeHours }}**h **{{ .status.UptimeMinutes }}**m
 
 Players online **{{ .status.PlayersOnline }}**/**{{ .status.PlayersMax}}** (**{{ .status.PlayersPeak }}**)
 {{- else }}

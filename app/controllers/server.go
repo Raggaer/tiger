@@ -30,6 +30,8 @@ type status struct {
 	MapHeight     uint16
 	PlayersMax    uint32
 	PlayersOnline uint32
+	UptimeHours   uint64
+	UptimeMinutes uint64
 }
 
 const (
@@ -314,6 +316,8 @@ func ServerStatus(context *Context, s *discordgo.Session, m *discordgo.MessageCr
 		}
 		currentServerStatus = s
 		currentServerStatus.Online = true
+		currentServerStatus.UptimeHours = currentServerStatus.Uptime / 3600
+		currentServerStatus.UptimeMinutes = (currentServerStatus.Uptime - (3600 * currentServerStatus.UptimeHours)) / 60
 
 		// Set server status cache
 		context.Cache.Set("serverStatus", s, 5*time.Minute)
