@@ -11,6 +11,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/raggaer/tiger/app/config"
 	"github.com/raggaer/tiger/app/controllers"
+	cache "github.com/robfig/go-cache"
 )
 
 type handlerList struct {
@@ -50,6 +51,7 @@ func registerHandlers(cfg *config.Config) {
 	handlers.Add("player view", controllers.ViewPlayer)
 	handlers.Add("player deaths", controllers.ViewPlayerDeaths)
 	handlers.Add("deaths", controllers.LatestDeaths)
+	handlers.Add("status", controllers.ServerStatus)
 	handlers.Add("reload templates", reloadTemplates)
 }
 
@@ -61,7 +63,7 @@ func (h *handlerList) Add(prefix string, hd interface{}) {
 	})
 }
 
-func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList, db *sql.DB, tpl *template.Template) func(s *discordgo.Session, m *discordgo.MessageCreate) {
+func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList, db *sql.DB, tpl *template.Template, cache *cache.Cache) func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Create controller context
 	ctx := controllers.Context{
 		Config:    cfg,
@@ -71,6 +73,7 @@ func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList, db *sql.DB, tpl
 		Start:     time.Now(),
 		DB:        db,
 		Template:  tpl,
+		Cache:     cache,
 	}
 
 	return func(s *discordgo.Session, m *discordgo.MessageCreate) {

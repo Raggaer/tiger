@@ -6,6 +6,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"syscall"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/raggaer/tiger/app/config"
@@ -23,6 +24,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("Unable to load application config: %v", err)
 	}
+
+	// Set application cache
+	cache := setCacheStorage(5*time.Minute, 10*time.Minute)
 
 	// Open database connection
 	db, err := loadDatabase(cfg.Database.User, cfg.Database.Password, cfg.Database.Schema)
@@ -52,7 +56,7 @@ func main() {
 	}
 
 	// Register mesasge handler
-	dg.AddHandler(handleCreateMessage(cfg, tasks, db, tpl))
+	dg.AddHandler(handleCreateMessage(cfg, tasks, db, tpl, cache))
 
 	// Open discord session
 	if err := dg.Open(); err != nil {
