@@ -1,0 +1,7 @@
+{{- if .status.Online }}
+Server is **Online**
+
+Players online **{{ .status.PlayersOnline }}**/**{{ .status.PlayersMax}}** (**{{ .status.PlayersPeak }}**)
+{{- else }}
+Server is **Offline**
+{{- end }}

@@ -11,6 +11,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/raggaer/tiger/app/config"
 	"github.com/raggaer/tiger/app/xml"
+	cache "github.com/robfig/go-cache"
 )
 
 // Context main controller for all actions
@@ -22,6 +23,7 @@ type Context struct {
 	Items     map[int]xml.Item
 	DB        *sql.DB
 	Template  *template.Template
+	Cache     *cache.Cache
 }
 
 // Command defines a discord command

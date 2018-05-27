@@ -21,7 +21,8 @@ type templateConfig struct {
 }
 
 type serverConfig struct {
-	Path string
+	Path    string
+	Address string
 }
 
 type discordConfig struct {

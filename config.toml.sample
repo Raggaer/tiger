@@ -4,6 +4,7 @@ extension = ".tiger"
 
 [server]
 path = ""
+address = "ip:7171"
 
 [discord]
 prefix = "!tiger "
