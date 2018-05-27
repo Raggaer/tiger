@@ -49,6 +49,10 @@ schema = ""
 
 Rename `config.toml.sample` to `config.toml` and execute **tiger**
 
+## Documentation
+
+You can all the documentation on the [Tiger website](https://tigerbot.org)
+
 ## License
 
 **Tiger** is licensed under the **MIT** license
