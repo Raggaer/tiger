@@ -52,6 +52,7 @@ func registerHandlers(cfg *config.Config) {
 	handlers.Add("player deaths", controllers.ViewPlayerDeaths)
 	handlers.Add("deaths", controllers.LatestDeaths)
 	handlers.Add("status", controllers.ServerStatus)
+	handlers.Add("about", controllers.About)
 	handlers.Add("reload templates", reloadTemplates)
 }
 

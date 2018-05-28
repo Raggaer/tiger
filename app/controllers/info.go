@@ -48,6 +48,20 @@ func Uptime(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) 
 	}, nil
 }
 
+// About returns information about tiger
+func About(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
+	data, err := context.ExecuteTemplate("about", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return &discordgo.MessageEmbed{
+		Title:       "About",
+		Description: data,
+		Color:       3447003,
+	}, nil
+}
+
 func uptimeMessage(day, hour, min, sec int) string {
 	msg := "%d day"
 	if day == 0 || day > 1 {
