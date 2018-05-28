@@ -67,14 +67,15 @@ func (h *handlerList) Add(prefix string, hd interface{}) {
 func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList, db *sql.DB, tpl *template.Template, cache *cache.Cache) func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Create controller context
 	ctx := controllers.Context{
-		Config:    cfg,
-		Monsters:  tasks.Monsters,
-		Items:     tasks.Items,
-		Vocations: tasks.Vocations,
-		Start:     time.Now(),
-		DB:        db,
-		Template:  tpl,
-		Cache:     cache,
+		Config:        cfg,
+		Monsters:      tasks.Monsters,
+		Items:         tasks.Items,
+		Vocations:     tasks.Vocations,
+		InstantSpells: tasks.InstantSpells,
+		Start:         time.Now(),
+		DB:            db,
+		Template:      tpl,
+		Cache:         cache,
 	}
 
 	return func(s *discordgo.Session, m *discordgo.MessageCreate) {

@@ -16,14 +16,15 @@ import (
 
 // Context main controller for all actions
 type Context struct {
-	Start     time.Time
-	Config    *config.Config
-	Monsters  map[string]*xml.Monster
-	Vocations map[string]*xml.Vocation
-	Items     map[int]xml.Item
-	DB        *sql.DB
-	Template  *template.Template
-	Cache     *cache.Cache
+	Start         time.Time
+	Config        *config.Config
+	Monsters      map[string]*xml.Monster
+	Vocations     map[string]*xml.Vocation
+	Items         map[int]xml.Item
+	InstantSpells map[string]*xml.InstantSpell
+	DB            *sql.DB
+	Template      *template.Template
+	Cache         *cache.Cache
 }
 
 // Command defines a discord command

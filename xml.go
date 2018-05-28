@@ -10,17 +10,49 @@ import (
 )
 
 type xmlTaskList struct {
-	Path      string
-	rw        sync.Mutex
-	Errors    []*xmlTaskError
-	Monsters  map[string]*xml.Monster
-	Vocations map[string]*xml.Vocation
-	Items     map[int]xml.Item
+	Path          string
+	rw            sync.Mutex
+	Errors        []*xmlTaskError
+	Monsters      map[string]*xml.Monster
+	Vocations     map[string]*xml.Vocation
+	InstantSpells map[string]*xml.InstantSpell
+	Items         map[int]xml.Item
 }
 
 type xmlTaskError struct {
 	Name  string
 	Error error
+}
+
+func loadServerInstantSpells(taskList *xmlTaskList, wg *sync.WaitGroup, path string) {
+	defer wg.Done()
+
+	// Load spell list
+	spells, err := xml.LoadInstantSpells(filepath.Join(path, "data", "spells", "spells.xml"))
+	if err != nil {
+		taskList.rw.Lock()
+		taskList.Errors = append(taskList.Errors, &xmlTaskError{
+			Name:  "Instant spell list",
+			Error: err,
+		})
+		taskList.rw.Unlock()
+		return
+	}
+
+	// Convert instant spell list to map
+	spellMap := make(map[string]*xml.InstantSpell, len(spells.Spells))
+	for _, s := range spells.Spells {
+		// Skip monster instant spell
+		if strings.HasPrefix(s.Words, "###") {
+			continue
+		}
+		spellMap[strings.ToLower(s.Words)] = s
+	}
+
+	// Set task spell list
+	taskList.rw.Lock()
+	taskList.InstantSpells = spellMap
+	taskList.rw.Unlock()
 }
 
 func loadServerData(cfg *config.Config) (*xmlTaskList, *xmlTaskError) {
@@ -29,12 +61,13 @@ func loadServerData(cfg *config.Config) (*xmlTaskList, *xmlTaskError) {
 	}
 	// Create wait group for all parsing tasks
 	tasks := &sync.WaitGroup{}
-	tasks.Add(3)
+	tasks.Add(4)
 
 	// Execute tasks
 	go loadServerMonsters(taskList, tasks, cfg.Server.Path)
 	go loadServerItems(taskList, tasks, cfg.Server.Path)
 	go loadServerVocations(taskList, tasks, cfg.Server.Path)
+	go loadServerInstantSpells(taskList, tasks, cfg.Server.Path)
 
 	// Wait for all tasks to end
 	tasks.Wait()
