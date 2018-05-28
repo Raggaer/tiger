@@ -16,12 +16,65 @@ type xmlTaskList struct {
 	Monsters      map[string]*xml.Monster
 	Vocations     map[string]*xml.Vocation
 	InstantSpells map[string]*xml.InstantSpell
+	RuneSpells    map[string]*xml.RuneSpell
 	Items         map[int]xml.Item
 }
 
 type xmlTaskError struct {
 	Name  string
 	Error error
+}
+
+func loadServerData(cfg *config.Config) (*xmlTaskList, *xmlTaskError) {
+	taskList := &xmlTaskList{
+		Path: cfg.Server.Path,
+	}
+	// Create wait group for all parsing tasks
+	tasks := &sync.WaitGroup{}
+	tasks.Add(5)
+
+	// Execute tasks
+	go loadServerMonsters(taskList, tasks, cfg.Server.Path)
+	go loadServerItems(taskList, tasks, cfg.Server.Path)
+	go loadServerVocations(taskList, tasks, cfg.Server.Path)
+	go loadServerInstantSpells(taskList, tasks, cfg.Server.Path)
+	go loadServerRuneSpells(taskList, tasks, cfg.Server.Path)
+
+	// Wait for all tasks to end
+	tasks.Wait()
+
+	// Check for errors
+	if len(taskList.Errors) >= 1 {
+		return nil, taskList.Errors[0]
+	}
+	return taskList, nil
+}
+
+func loadServerRuneSpells(taskList *xmlTaskList, wg *sync.WaitGroup, path string) {
+	defer wg.Done()
+
+	// Load spell list
+	spells, err := xml.LoadRuneSpells(filepath.Join(path, "data", "spells", "spells.xml"))
+	if err != nil {
+		taskList.rw.Lock()
+		taskList.Errors = append(taskList.Errors, &xmlTaskError{
+			Name:  "Rune spell list",
+			Error: err,
+		})
+		taskList.rw.Unlock()
+		return
+	}
+
+	// Convert rune spell list to map
+	spellMap := make(map[string]*xml.RuneSpell, len(spells.Runes))
+	for _, s := range spells.Runes {
+		spellMap[strings.ToLower(s.Name)] = s
+	}
+
+	// Set task spell list
+	taskList.rw.Lock()
+	taskList.RuneSpells = spellMap
+	taskList.rw.Unlock()
 }
 
 func loadServerInstantSpells(taskList *xmlTaskList, wg *sync.WaitGroup, path string) {
@@ -53,30 +106,6 @@ func loadServerInstantSpells(taskList *xmlTaskList, wg *sync.WaitGroup, path str
 	taskList.rw.Lock()
 	taskList.InstantSpells = spellMap
 	taskList.rw.Unlock()
-}
-
-func loadServerData(cfg *config.Config) (*xmlTaskList, *xmlTaskError) {
-	taskList := &xmlTaskList{
-		Path: cfg.Server.Path,
-	}
-	// Create wait group for all parsing tasks
-	tasks := &sync.WaitGroup{}
-	tasks.Add(4)
-
-	// Execute tasks
-	go loadServerMonsters(taskList, tasks, cfg.Server.Path)
-	go loadServerItems(taskList, tasks, cfg.Server.Path)
-	go loadServerVocations(taskList, tasks, cfg.Server.Path)
-	go loadServerInstantSpells(taskList, tasks, cfg.Server.Path)
-
-	// Wait for all tasks to end
-	tasks.Wait()
-
-	// Check for errors
-	if len(taskList.Errors) >= 1 {
-		return nil, taskList.Errors[0]
-	}
-	return taskList, nil
 }
 
 func loadServerVocations(taskList *xmlTaskList, wg *sync.WaitGroup, path string) {

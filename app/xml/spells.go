@@ -29,6 +29,12 @@ type InstantSpell struct {
 	Vocations  []Vocation `xml:"vocation"`
 }
 
+// RuneSpellList defines the server rune spell list
+type RuneSpellList struct {
+	XMLName xml.Name     `xml:"spells"`
+	Runes   []*RuneSpell `xml:"rune"`
+}
+
 // RuneSpell defines a server rune spell
 type RuneSpell struct {
 	XMLName       xml.Name   `xml:"rune"`
@@ -68,6 +74,25 @@ func LoadInstantSpells(path string) (*InstantSpellList, error) {
 
 	// Create xml decoder
 	list := InstantSpellList{}
+	decoder := xml.NewDecoder(file)
+	if err := decoder.Decode(&list); err != nil {
+		return nil, err
+	}
+
+	return &list, nil
+}
+
+// LoadRuneSpells loads the server rune spell list
+func LoadRuneSpells(path string) (*RuneSpellList, error) {
+	// Open spells.xml file
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	// Create xml decoder
+	list := RuneSpellList{}
 	decoder := xml.NewDecoder(file)
 	if err := decoder.Decode(&list); err != nil {
 		return nil, err
