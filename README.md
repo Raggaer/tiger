@@ -28,13 +28,19 @@ Allow the bot to join your server
 Configure `config.toml.sample` file:
 
 ```toml
+[template]
+directory = "template/" # Directory where the bot will search for templates
+extension = ".tiger" # The exntesion of your templates
+
 [server]
 path = "" # Your server location 
+address = "" # Your server address with port included
 
 [discord]
 prefix = "/" # Prefix for the bot commands
 token = "" # Discord bot token
 status = "" # Bot status message (Playing...)
+channels = ["test", "bot-test"] # Channels where the bot will listen to commands
 ```
 
 By default **tiger** will try to load your database settings from your server `config.lua` file, you can however use the config file for that too:
