@@ -33,6 +33,7 @@ func registerHandlers(cfg *config.Config) {
 	}
 
 	// Register handlers
+	handlers.Add("spell", controllers.ViewSpell)
 	handlers.Add("top fish", controllers.ViewTopPlayersSkillFishing)
 	handlers.Add("top shield", controllers.ViewTopPlayersSkillShielding)
 	handlers.Add("top dist", controllers.ViewTopPlayersSkillDist)

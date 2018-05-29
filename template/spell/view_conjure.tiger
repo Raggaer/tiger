@@ -1,0 +1,9 @@
+Name: **{{ .conjure.Name }}** (**{{ .conjure.Words }}**)
+Level: **{{ .conjure.Level }}**
+Mana: **{{ .conjure.Mana }}**
+Soul: **{{ .conjure.Soul }}**
+
+Usable by:
+{{- range $index, $element := .conjure.Vocations }}
+- **{{ $element.Name }}**
+{{- end }}
