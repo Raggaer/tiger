@@ -22,6 +22,8 @@ type Context struct {
 	Vocations     map[string]*xml.Vocation
 	Items         map[int]xml.Item
 	InstantSpells map[string]*xml.InstantSpell
+	RuneSpells    map[string]*xml.RuneSpell
+	ConjureSpells map[string]*xml.ConjureSpell
 	DB            *sql.DB
 	Template      *template.Template
 	Cache         *cache.Cache

@@ -72,6 +72,8 @@ func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList, db *sql.DB, tpl
 		Items:         tasks.Items,
 		Vocations:     tasks.Vocations,
 		InstantSpells: tasks.InstantSpells,
+		RuneSpells:    tasks.RuneSpells,
+		ConjureSpells: tasks.ConjureSpells,
 		Start:         time.Now(),
 		DB:            db,
 		Template:      tpl,

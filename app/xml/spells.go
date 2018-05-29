@@ -49,6 +49,12 @@ type RuneSpell struct {
 	Vocations     []Vocation `xml:"vocation"`
 }
 
+// ConjureSpellList defines the server conjure spell list
+type ConjureSpellList struct {
+	XMLName  xml.Name        `xml:"spells"`
+	Conjures []*ConjureSpell `xml:"conjure"`
+}
+
 // ConjureSpell defines a server conjure spell
 type ConjureSpell struct {
 	XMLName   xml.Name   `xml:"conjure"`
@@ -61,6 +67,25 @@ type ConjureSpell struct {
 	Words     string     `xml:"words,attr"`
 	CoolDown  int        `xml:"cooldown,attr"`
 	Vocations []Vocation `xml:"vocation"`
+}
+
+// LoadConjuretSpells loads the server instant spell list
+func LoadConjureSpells(path string) (*ConjureSpellList, error) {
+	// Open spells.xml file
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	// Create xml decoder
+	list := ConjureSpellList{}
+	decoder := xml.NewDecoder(file)
+	if err := decoder.Decode(&list); err != nil {
+		return nil, err
+	}
+
+	return &list, nil
 }
 
 // LoadInstantSpells loads the server instant spell list
