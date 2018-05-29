@@ -41,6 +41,7 @@ prefix = "/" # Prefix for the bot commands
 token = "" # Discord bot token
 status = "" # Bot status message (Playing...)
 channels = ["test", "bot-test"] # Channels where the bot will listen to commands
+deathChannels = ["test", "bot-test"] # Channels where the bot will broadcast player deaths
 ```
 
 By default **tiger** will try to load your database settings from your server `config.lua` file, you can however use the config file for that too:
