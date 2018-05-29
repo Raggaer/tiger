@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -11,23 +10,12 @@ import (
 	"github.com/raggaer/tiger/app/models"
 )
 
-func monitorServerPlayerDeaths(cfg *config.Config, tick time.Duration, db *sql.DB, s *discordgo.Session) {
+func monitorServerPlayerDeaths(guild *discordgo.Guild, cfg *config.Config, tick time.Duration, db *sql.DB, s *discordgo.Session) {
 	// Create event ticker
 	ticker := time.NewTicker(tick)
 	defer ticker.Stop()
 
-	// Get valid death channels from config
-	guid := s.State.Guilds[0]
-	guild, err := s.Guild(guid.ID)
-	if err != nil {
-		log.Fatalf("Unable to retrieve guild channels: %v", err)
-	}
-
-	// Wait for the guild channels to be ready
-	for len(guild.Channels) <= 0 {
-		time.Sleep(time.Second)
-	}
-
+	// Retrieve valid death channels
 	deathChannels := []string{}
 	for _, ch := range guild.Channels {
 		for _, dh := range cfg.Discord.DeathChannels {

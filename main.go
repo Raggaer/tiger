@@ -55,8 +55,9 @@ func main() {
 		log.Fatalf("Unable to load template files: %v", err)
 	}
 
-	// Register mesasge handler
+	// Register handlers
 	dg.AddHandler(handleCreateMessage(cfg, tasks, db, tpl, cache))
+	dg.AddHandler(handleGuildCreate(cfg, tasks, db, tpl, cache))
 
 	// Open discord session
 	if err := dg.Open(); err != nil {
@@ -65,9 +66,6 @@ func main() {
 	if err := dg.UpdateStatus(0, cfg.Discord.Status); err != nil {
 		log.Fatalf("Unable to set bot status: %v", err)
 	}
-
-	// Register events
-	go monitorServerPlayerDeaths(cfg, time.Minute, db, dg)
 
 	// Wait here until CTRL-C or other term signal is received
 	log.Println("Tiger is now running. Press CTRL-C to exit")
