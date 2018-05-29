@@ -66,6 +66,9 @@ func main() {
 		log.Fatalf("Unable to set bot status: %v", err)
 	}
 
+	// Register events
+	go monitorServerPlayerDeaths(cfg, time.Minute, db, dg)
+
 	// Wait here until CTRL-C or other term signal is received
 	log.Println("Tiger is now running. Press CTRL-C to exit")
 	sc := make(chan os.Signal, 1)

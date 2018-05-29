@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"strings"
+	"time"
 
 	"github.com/raggaer/tiger/app/xml"
 )
@@ -21,12 +22,37 @@ type PlayerDeath struct {
 	MostDamageUnjustified bool
 }
 
+// GetTimeServerDeaths retrieves server deaths by the given time
+func GetTimeServerDeaths(db *sql.DB, limit int, t time.Time) ([]*PlayerDeath, error) {
+	deaths := []*PlayerDeath{}
+
+	// Retrieve deaths using monster description
+	rows, err := db.Query("SELECT a.name, b.time, b.level, b.killed_by FROM players a, player_deaths b WHERE a.id = b.player_id AND b.time >= ? ORDER BY b.time DESC LIMIT ?", t.Unix(), limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// Parse deaths
+	for rows.Next() {
+		death := &PlayerDeath{
+			Player: &Player{},
+		}
+		if err := rows.Scan(&death.Player.Name, &death.Time, &death.Level, &death.KilledBy); err != nil {
+			return nil, err
+		}
+		deaths = append(deaths, death)
+	}
+
+	return deaths, nil
+}
+
 // GetServerDeaths retrieves server deaths
 func GetServerDeaths(db *sql.DB, limit int) ([]*PlayerDeath, error) {
 	deaths := []*PlayerDeath{}
 
 	// Retrieve deaths using monster description
-	rows, err := db.Query("SELECT a.name, b.time, b.level, b.killed_by FROM players a, player_deaths b ORDER BY b.time DESC LIMIT ?", limit)
+	rows, err := db.Query("SELECT a.name, b.time, b.level, b.killed_by FROM players a, player_deaths b WHERE a.id = b.player_id ORDER BY b.time DESC LIMIT ?", limit)
 	if err != nil {
 		return nil, err
 	}

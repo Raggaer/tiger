@@ -26,10 +26,11 @@ type serverConfig struct {
 }
 
 type discordConfig struct {
-	Token    string
-	Prefix   string
-	Status   string
-	Channels []string
+	Token         string
+	Prefix        string
+	Status        string
+	Channels      []string
+	DeathChannels []string
 }
 
 type databaseConfig struct {

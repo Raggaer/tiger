@@ -11,3 +11,4 @@ prefix = "!tiger "
 token = ""
 status = ""
 channels = ["test", "bot-test"]
+deathChannels = ["test", "bot-test"]
