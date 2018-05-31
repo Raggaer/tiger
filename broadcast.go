@@ -16,14 +16,7 @@ func monitorServerPlayerDeaths(guild *discordgo.Guild, cfg *config.Config, tick 
 	defer ticker.Stop()
 
 	// Retrieve valid death channels
-	deathChannels := []string{}
-	for _, ch := range guild.Channels {
-		for _, dh := range cfg.Discord.DeathChannels {
-			if dh == ch.Name {
-				deathChannels = append(deathChannels, ch.ID)
-			}
-		}
-	}
+	deathChannels := retrieveValidChannels(guild, cfg.Discord.DeathChannels)
 
 	// Wait for ticker channel
 	for t := range ticker.C {
@@ -31,6 +24,7 @@ func monitorServerPlayerDeaths(guild *discordgo.Guild, cfg *config.Config, tick 
 		if err != nil {
 			continue
 		}
+
 		// Create discord message
 		for _, ch := range deathChannels {
 			for _, death := range deaths {
@@ -46,4 +40,16 @@ func monitorServerPlayerDeaths(guild *discordgo.Guild, cfg *config.Config, tick 
 			}
 		}
 	}
+}
+
+func retrieveValidChannels(guild *discordgo.Guild, channelNames []string) []string {
+	validChannels := []string{}
+	for _, ch := range guild.Channels {
+		for _, dh := range channelNames {
+			if dh == ch.Name {
+				validChannels = append(validChannels, ch.ID)
+			}
+		}
+	}
+	return validChannels
 }
