@@ -12,6 +12,7 @@ Discord bot for Open Tibia Servers
 - Latest server deaths
 - Highscores
 - Solid template system
+- Death broadcasts
 
 ## Installing
 
