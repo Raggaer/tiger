@@ -1,43 +1,49 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
+	"log"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/raggaer/tiger/app/config"
+	"github.com/raggaer/tiger/app/controllers"
 	"github.com/raggaer/tiger/app/models"
 )
 
-func monitorServerPlayerDeaths(guild *discordgo.Guild, cfg *config.Config, tick time.Duration, db *sql.DB, s *discordgo.Session) {
+func monitorServerPlayerDeaths(guild *discordgo.Guild, tick time.Duration, ctx *controllers.Context, s *discordgo.Session, event *discordgo.GuildCreate) {
 	// Create event ticker
 	ticker := time.NewTicker(tick)
 	defer ticker.Stop()
 
 	// Retrieve valid death channels
-	deathChannels := retrieveValidChannels(guild, cfg.Discord.DeathChannels)
+	deathChannels := retrieveValidChannels(guild, ctx.Config.Discord.DeathChannels)
 
 	// Wait for ticker channel
 	for t := range ticker.C {
-		deaths, err := models.GetTimeServerDeaths(db, 10, t)
+		deaths, err := models.GetTimeServerDeaths(ctx.DB, 10, t)
 		if err != nil {
+			continue
+		}
+
+		// Skip when there are no deaths
+		if len(deaths) <= 0 {
+			continue
+		}
+
+		data, err := ctx.ExecuteTemplate("broadcast_death", map[string]interface{}{
+			"deaths": deaths,
+		})
+		if err != nil {
+			log.Printf("Unable to execute broadcast death template: %v \r\n", err)
 			continue
 		}
 
 		// Create discord message
 		for _, ch := range deathChannels {
-			for _, death := range deaths {
-				s.ChannelMessageSendEmbed(ch, &discordgo.MessageEmbed{
-					Title: "Player death",
-					Color: 3447003,
-					Description: fmt.Sprintf(
-						"Player **%s** killed by **%s**",
-						death.Player.Name,
-						death.KilledBy,
-					),
-				})
-			}
+			s.ChannelMessageSendEmbed(ch, &discordgo.MessageEmbed{
+				Title:       "Death broadcast",
+				Color:       3447003,
+				Description: data,
+			})
 		}
 	}
 }
