@@ -23,11 +23,11 @@ type PlayerDeath struct {
 }
 
 // GetTimeServerDeaths retrieves server deaths by the given time
-func GetTimeServerDeaths(db *sql.DB, limit int, t time.Time) ([]*PlayerDeath, error) {
+func GetTimeServerDeaths(db *sql.DB, limit int, n, t time.Time) ([]*PlayerDeath, error) {
 	deaths := []*PlayerDeath{}
 
 	// Retrieve deaths using monster description
-	rows, err := db.Query("SELECT a.name, b.time, b.level, b.killed_by FROM players a, player_deaths b WHERE a.id = b.player_id AND b.time >= ? ORDER BY b.time DESC LIMIT ?", t.Unix(), limit)
+	rows, err := db.Query("SELECT a.name, b.time, b.level, b.killed_by FROM players a, player_deaths b WHERE a.id = b.player_id AND b.time >= ? AND b.time <= ? ORDER BY b.time DESC LIMIT ?", t.Unix(), n.Unix(), limit)
 	if err != nil {
 		return nil, err
 	}

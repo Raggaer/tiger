@@ -19,7 +19,7 @@ func monitorServerPlayerDeaths(guild *discordgo.Guild, tick time.Duration, ctx *
 
 	// Wait for ticker channel
 	for t := range ticker.C {
-		deaths, err := models.GetTimeServerDeaths(ctx.DB, 10, t.Add(-tick))
+		deaths, err := models.GetTimeServerDeaths(ctx.DB, 10, t, t.Add(-tick))
 		if err != nil {
 			log.Printf("Unable to retrieve latest server deaths (death broadcast): %v \r\n", err)
 			continue
