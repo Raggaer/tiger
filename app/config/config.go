@@ -31,6 +31,7 @@ type discordConfig struct {
 	Status        string
 	Channels      []string
 	DeathChannels []string
+	NewsChannels  []string
 }
 
 type databaseConfig struct {
