@@ -14,6 +14,8 @@ Discord bot for Open Tibia Servers (TFS 1.+)
 - Solid template system
 - Death broadcasts
 
+You can check all the bot commands on the [tiger website](https://tigerbot.org/commands.html)
+
 ## Installing
 
 To install **tiger** you can grab the latest source and compile or download an already compiled tiger application ([AppVeyor](https://ci.appveyor.com/project/Raggaer/tiger) or [GitHub releases](https://github.com/Raggaer/tiger/releases))
