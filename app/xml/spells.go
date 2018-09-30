@@ -3,6 +3,8 @@ package xml
 import (
 	"encoding/xml"
 	"os"
+
+	"github.com/schollz/closestmatch"
 )
 
 // InstantSpellList defines the server instant spell list
@@ -124,4 +126,34 @@ func LoadRuneSpells(path string) (*RuneSpellList, error) {
 	}
 
 	return &list, nil
+}
+
+// CreateFuzzyClosest creates a conjure spell list fuzzy closest search
+func (c *InstantSpellList) CreateFuzzyClosest(s int) *closestmatch.ClosestMatch {
+	list := []string{}
+	for _, spell := range c.Spells {
+		list = append(list, spell.Words)
+	}
+	cm := closestmatch.New(list, []int{s})
+	return cm
+}
+
+// CreateFuzzyClosest creates a conjure spell list fuzzy closest search
+func (c *RuneSpellList) CreateFuzzyClosest(s int) *closestmatch.ClosestMatch {
+	list := []string{}
+	for _, r := range c.Runes {
+		list = append(list, r.Name)
+	}
+	cm := closestmatch.New(list, []int{s})
+	return cm
+}
+
+// CreateFuzzyClosest creates a conjure spell list fuzzy closest search
+func (c *ConjureSpellList) CreateFuzzyClosest(s int) *closestmatch.ClosestMatch {
+	list := []string{}
+	for _, conjure := range c.Conjures {
+		list = append(list, conjure.Words)
+	}
+	cm := closestmatch.New(list, []int{s})
+	return cm
 }

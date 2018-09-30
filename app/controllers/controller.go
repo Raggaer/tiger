@@ -12,21 +12,25 @@ import (
 	"github.com/raggaer/tiger/app/config"
 	"github.com/raggaer/tiger/app/xml"
 	cache "github.com/robfig/go-cache"
+	"github.com/schollz/closestmatch"
 )
 
 // Context main controller for all actions
 type Context struct {
-	Start         time.Time
-	Config        *config.Config
-	Monsters      map[string]*xml.Monster
-	Vocations     map[string]*xml.Vocation
-	Items         map[int]xml.Item
-	InstantSpells map[string]*xml.InstantSpell
-	RuneSpells    map[string]*xml.RuneSpell
-	ConjureSpells map[string]*xml.ConjureSpell
-	DB            *sql.DB
-	Template      *template.Template
-	Cache         *cache.Cache
+	Start                    time.Time
+	Config                   *config.Config
+	Monsters                 map[string]*xml.Monster
+	Vocations                map[string]*xml.Vocation
+	Items                    map[int]xml.Item
+	InstantSpells            map[string]*xml.InstantSpell
+	InstantSpellsFuzzySearch *closestmatch.ClosestMatch
+	RuneSpells               map[string]*xml.RuneSpell
+	RuneSpellsFuzzySearch    *closestmatch.ClosestMatch
+	ConjureSpells            map[string]*xml.ConjureSpell
+	ConjureSpellsFuzzySearch *closestmatch.ClosestMatch
+	DB                       *sql.DB
+	Template                 *template.Template
+	Cache                    *cache.Cache
 }
 
 // Command defines a discord command

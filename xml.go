@@ -7,18 +7,22 @@ import (
 
 	"github.com/raggaer/tiger/app/config"
 	"github.com/raggaer/tiger/app/xml"
+	"github.com/schollz/closestmatch"
 )
 
 type xmlTaskList struct {
-	Path          string
-	rw            sync.Mutex
-	Errors        []*xmlTaskError
-	Monsters      map[string]*xml.Monster
-	Vocations     map[string]*xml.Vocation
-	InstantSpells map[string]*xml.InstantSpell
-	RuneSpells    map[string]*xml.RuneSpell
-	ConjureSpells map[string]*xml.ConjureSpell
-	Items         map[int]xml.Item
+	Path                     string
+	rw                       sync.Mutex
+	Errors                   []*xmlTaskError
+	Monsters                 map[string]*xml.Monster
+	Vocations                map[string]*xml.Vocation
+	InstantSpells            map[string]*xml.InstantSpell
+	InstantSpellsFuzzySearch *closestmatch.ClosestMatch
+	RuneSpells               map[string]*xml.RuneSpell
+	RuneSpellsFuzzySearch    *closestmatch.ClosestMatch
+	ConjureSpells            map[string]*xml.ConjureSpell
+	ConjureSpellsFuzzySearch *closestmatch.ClosestMatch
+	Items                    map[int]xml.Item
 }
 
 type xmlTaskError struct {
@@ -75,6 +79,7 @@ func loadServerConjureSpells(taskList *xmlTaskList, wg *sync.WaitGroup, path str
 
 	// Set task spell list
 	taskList.rw.Lock()
+	taskList.ConjureSpellsFuzzySearch = spells.CreateFuzzyClosest(2)
 	taskList.ConjureSpells = spellMap
 	taskList.rw.Unlock()
 }
@@ -102,6 +107,7 @@ func loadServerRuneSpells(taskList *xmlTaskList, wg *sync.WaitGroup, path string
 
 	// Set task spell list
 	taskList.rw.Lock()
+	taskList.RuneSpellsFuzzySearch = spells.CreateFuzzyClosest(2)
 	taskList.RuneSpells = spellMap
 	taskList.rw.Unlock()
 }
@@ -133,6 +139,7 @@ func loadServerInstantSpells(taskList *xmlTaskList, wg *sync.WaitGroup, path str
 
 	// Set task spell list
 	taskList.rw.Lock()
+	taskList.InstantSpellsFuzzySearch = spells.CreateFuzzyClosest(2)
 	taskList.InstantSpells = spellMap
 	taskList.rw.Unlock()
 }
