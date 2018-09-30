@@ -253,6 +253,27 @@ func GetTopPlayersByMagicLevel(db *sql.DB, limit int) ([]*Player, error) {
 	return players, nil
 }
 
+// GetPlayersFuzzy retrieves a slice of all player names
+func GetPlayersFuzzy(db *sql.DB) ([]string, error) {
+	players := []string{}
+
+	rows, err := db.Query("SELECT name FROM players")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var p string
+		if err := rows.Scan(&p); err != nil {
+			return nil, err
+		}
+		players = append(players, p)
+	}
+
+	return players, nil
+}
+
 // GetPlayerByName retrieves a character by the name
 func GetPlayerByName(db *sql.DB, name string) (*Player, error) {
 	player := Player{}
