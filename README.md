@@ -36,7 +36,7 @@ directory = "template/" # Directory where the bot will search for templates
 extension = ".tiger" # The exntesion of your templates
 
 [server]
-path = "" # Your server location 
+path = "" # Your server files location 
 address = "" # Your server address with port included
 
 [discord]

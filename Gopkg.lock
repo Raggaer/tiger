@@ -42,6 +42,14 @@
   revision = "9fc39e0dbf62c034ec4e45e6120fc69433a3ec51"
 
 [[projects]]
+  digest = "1:56e103a84569a16c576b71c351baa1ff44c59a63308dc6eb86435b531989e933"
+  name = "github.com/schollz/closestmatch"
+  packages = ["."]
+  pruneopts = ""
+  revision = "56fb6b15a5e88fbcbc21b196488e749fc176514c"
+  version = "v2.1.0"
+
+[[projects]]
   branch = "master"
   digest = "1:b7bd7ea0cd580bb41608de12827d49154d7115f844af01f8ee51f38d5e32459e"
   name = "github.com/yuin/gopher-lua"
@@ -112,6 +120,7 @@
     "github.com/bwmarrin/discordgo",
     "github.com/go-sql-driver/mysql",
     "github.com/robfig/go-cache",
+    "github.com/schollz/closestmatch",
     "github.com/yuin/gopher-lua",
     "golang.org/x/net/html/charset",
   ]
