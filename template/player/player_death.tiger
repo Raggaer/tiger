@@ -1,3 +1,5 @@
+<template>
+<description>
 {{- if not .deaths }}
 No deaths
 {{- end }}
@@ -6,3 +8,5 @@ No deaths
 {{- $deathTime := unixToTime $element.Time -}}
 {{- $index }}. Killed by **{{ $element.KilledBy }}** at level **{{ $element.Level }}** - *{{ timeAgoCurrent $deathTime }} ago*
 {{ end }}
+</description>
+</template>

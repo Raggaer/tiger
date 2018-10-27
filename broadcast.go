@@ -30,7 +30,7 @@ func monitorServerPlayerDeaths(guild *discordgo.Guild, tick time.Duration, ctx *
 			continue
 		}
 
-		data, err := ctx.ExecuteTemplate("broadcast_death", map[string]interface{}{
+		msg, err := ctx.ExecuteTemplate("broadcast_death", map[string]interface{}{
 			"deaths": deaths,
 		})
 		if err != nil {
@@ -40,11 +40,7 @@ func monitorServerPlayerDeaths(guild *discordgo.Guild, tick time.Duration, ctx *
 
 		// Create discord message
 		for _, ch := range deathChannels {
-			s.ChannelMessageSendEmbed(ch, &discordgo.MessageEmbed{
-				Title:       "Death broadcast",
-				Color:       3447003,
-				Description: data,
-			})
+			s.ChannelMessageSendEmbed(ch, msg)
 		}
 	}
 }

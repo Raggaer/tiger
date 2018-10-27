@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"strings"
-	"text/template"
 	"time"
 
 	"log"
@@ -11,6 +10,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/raggaer/tiger/app/config"
 	"github.com/raggaer/tiger/app/controllers"
+	"github.com/raggaer/tiger/app/xml"
 	cache "github.com/robfig/go-cache"
 )
 
@@ -65,7 +65,7 @@ func (h *handlerList) Add(prefix string, hd interface{}) {
 	})
 }
 
-func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList, db *sql.DB, tpl *template.Template, cache *cache.Cache) func(s *discordgo.Session, m *discordgo.MessageCreate) {
+func handleCreateMessage(cfg *config.Config, tasks *xmlTaskList, db *sql.DB, tpl map[string]*xml.CommandTemplate, cache *cache.Cache) func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Create controller context
 	ctx := controllers.Context{
 		Config:                   cfg,

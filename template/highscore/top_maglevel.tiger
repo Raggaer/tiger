@@ -1,3 +1,5 @@
+<template>
+<description>
 {{- if not .players }}
 No players
 {{- else }}
@@ -6,3 +8,5 @@ No players
 {{ $index }}. **{{ $element.Name }}** with magic level **{{ $element.MagicLevel }}**
 {{ end }}
 {{- end }}
+</description>
+</template>

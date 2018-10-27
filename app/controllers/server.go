@@ -293,20 +293,11 @@ func ServerStatus(context *Context, s *discordgo.Session, m *discordgo.MessageCr
 		// If there is an error
 		// Render message as server offline
 		if err != nil {
-			data, err := context.ExecuteTemplate("server_status", map[string]interface{}{
+			return context.ExecuteTemplate("server_status", map[string]interface{}{
 				"status": &status{
 					Online: false,
 				},
 			})
-			if err != nil {
-				return nil, err
-			}
-
-			return &discordgo.MessageEmbed{
-				Title:       "Server status",
-				Description: data,
-				Color:       3447003,
-			}, nil
 		}
 
 		// Retrieve server status
@@ -323,18 +314,9 @@ func ServerStatus(context *Context, s *discordgo.Session, m *discordgo.MessageCr
 		context.Cache.Set("serverStatus", s, 5*time.Minute)
 	}
 
-	data, err := context.ExecuteTemplate("server_status", map[string]interface{}{
+	return context.ExecuteTemplate("server_status", map[string]interface{}{
 		"status": currentServerStatus,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "Server status",
-		Description: data,
-		Color:       3447003,
-	}, nil
 }
 
 // LatestDeaths retrieves the server latest deaths
@@ -345,16 +327,7 @@ func LatestDeaths(context *Context, s *discordgo.Session, m *discordgo.MessageCr
 		return nil, err
 	}
 
-	data, err := context.ExecuteTemplate("server_death", map[string]interface{}{
+	return context.ExecuteTemplate("server_death", map[string]interface{}{
 		"deaths": deaths,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "Latest deaths",
-		Description: data,
-		Color:       3447003,
-	}, nil
 }

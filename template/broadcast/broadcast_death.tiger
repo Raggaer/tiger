@@ -1,3 +1,5 @@
+<template>
+<description>
 {{- if not .deaths }}
 No deaths
 {{- end }}
@@ -5,3 +7,5 @@ No deaths
 {{- $index := sum $i 1 -}}
 {{- $index }}. **{{ $element.Player.Name }}** Killed by **{{ $element.KilledBy }}** at level **{{ $element.Level }}**
 {{ end }}
+</description>
+</template>

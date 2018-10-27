@@ -1,3 +1,5 @@
+<template>
+<description>
 **You view {{ .monster.Description }}**
 
 - **Experience**: {{ .monster.Experience }}
@@ -6,3 +8,5 @@
 {{ range $index, $element := .monster.Attacks.Attacks }} 
 - **Attack**: {{ $element.Name }} ({{ $element.Min}}, {{ $element.Max}}) 
 {{- end }}
+</description>
+</template>

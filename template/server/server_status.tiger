@@ -1,3 +1,5 @@
+<template>
+<description>
 {{- if .status.Online }}
 Server is **Online**. Uptime **{{ .status.UptimeHours }}**h **{{ .status.UptimeMinutes }}**m
 
@@ -5,3 +7,5 @@ Players online **{{ .status.PlayersOnline }}**/**{{ .status.PlayersMax}}** (**{{
 {{- else }}
 Server is **Offline**
 {{- end }}
+</description>
+</template>

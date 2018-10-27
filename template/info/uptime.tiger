@@ -1,1 +1,3 @@
-Tiger has been running for {{ uptimeMessage .start .current }}
+<template>
+  <description>Tiger has been running for {{ uptimeMessage .start .current }}</description>
+</template>

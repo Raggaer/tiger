@@ -55,18 +55,9 @@ func ViewTopPlayersSkillFishing(context *Context, s *discordgo.Session, m *disco
 		return nil, err
 	}
 
-	data, err := context.ExecuteTemplate("top_fishing", map[string]interface{}{
+	return context.ExecuteTemplate("top_fishing", map[string]interface{}{
 		"players": players,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "Top players by fishing",
-		Description: data,
-		Color:       3447003,
-	}, nil
 }
 
 // ViewTopPlayersSkillShielding returns a list of the server top skill shielding players
@@ -77,18 +68,9 @@ func ViewTopPlayersSkillShielding(context *Context, s *discordgo.Session, m *dis
 		return nil, err
 	}
 
-	data, err := context.ExecuteTemplate("top_shield", map[string]interface{}{
+	return context.ExecuteTemplate("top_shield", map[string]interface{}{
 		"players": players,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "Top players by shielding",
-		Description: data,
-		Color:       3447003,
-	}, nil
 }
 
 // ViewTopPlayersSkillDist returns a list of the server top skill dist players
@@ -99,18 +81,9 @@ func ViewTopPlayersSkillDist(context *Context, s *discordgo.Session, m *discordg
 		return nil, err
 	}
 
-	data, err := context.ExecuteTemplate("top_dist", map[string]interface{}{
+	return context.ExecuteTemplate("top_dist", map[string]interface{}{
 		"players": players,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "Top players by distance fighting",
-		Description: data,
-		Color:       3447003,
-	}, nil
 }
 
 // ViewTopPlayersSkillAxe returns a list of the server top skill axe players
@@ -121,18 +94,9 @@ func ViewTopPlayersSkillAxe(context *Context, s *discordgo.Session, m *discordgo
 		return nil, err
 	}
 
-	data, err := context.ExecuteTemplate("top_axe", map[string]interface{}{
+	return context.ExecuteTemplate("top_axe", map[string]interface{}{
 		"players": players,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "Top players by axe fighting",
-		Description: data,
-		Color:       3447003,
-	}, nil
 }
 
 // ViewTopPlayersSkillSword returns a list of the server top skill sword players
@@ -143,18 +107,9 @@ func ViewTopPlayersSkillSword(context *Context, s *discordgo.Session, m *discord
 		return nil, err
 	}
 
-	data, err := context.ExecuteTemplate("top_sword", map[string]interface{}{
+	return context.ExecuteTemplate("top_sword", map[string]interface{}{
 		"players": players,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "Top players by sword fighting",
-		Description: data,
-		Color:       3447003,
-	}, nil
 }
 
 // ViewTopPlayersSkillClub returns a list of the server top skill club players
@@ -165,18 +120,9 @@ func ViewTopPlayersSkillClub(context *Context, s *discordgo.Session, m *discordg
 		return nil, err
 	}
 
-	data, err := context.ExecuteTemplate("top_club", map[string]interface{}{
+	return context.ExecuteTemplate("top_club", map[string]interface{}{
 		"players": players,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "Top players by club fighting",
-		Description: data,
-		Color:       3447003,
-	}, nil
 }
 
 // ViewTopPlayersSkillFist returns a list of the server top skill fist players
@@ -187,18 +133,9 @@ func ViewTopPlayersSkillFist(context *Context, s *discordgo.Session, m *discordg
 		return nil, err
 	}
 
-	data, err := context.ExecuteTemplate("top_fist", map[string]interface{}{
+	return context.ExecuteTemplate("top_fist", map[string]interface{}{
 		"players": players,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "Top players by fist fighting",
-		Description: data,
-		Color:       3447003,
-	}, nil
 }
 
 // ViewTopPlayersMagicLevel returns a list of the server top magic level players
@@ -209,18 +146,9 @@ func ViewTopPlayersMagicLevel(context *Context, s *discordgo.Session, m *discord
 		return nil, err
 	}
 
-	data, err := context.ExecuteTemplate("top_maglevel", map[string]interface{}{
+	return context.ExecuteTemplate("top_maglevel", map[string]interface{}{
 		"players": players,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "Top players by magic level",
-		Description: data,
-		Color:       3447003,
-	}, nil
 }
 
 // ViewTopPlayersExperience returns a list of the server top experience players
@@ -231,16 +159,7 @@ func ViewTopPlayersExperience(context *Context, s *discordgo.Session, m *discord
 		return nil, err
 	}
 
-	data, err := context.ExecuteTemplate("top_experience", map[string]interface{}{
+	return context.ExecuteTemplate("top_experience", map[string]interface{}{
 		"players": players,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "Top players by experience",
-		Description: data,
-		Color:       3447003,
-	}, nil
 }

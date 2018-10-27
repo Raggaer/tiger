@@ -1,18 +1,19 @@
 package controllers
 
 import (
-	"bytes"
 	"database/sql"
 	"strings"
 	"time"
-
-	"text/template"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/raggaer/tiger/app/config"
 	"github.com/raggaer/tiger/app/xml"
 	cache "github.com/robfig/go-cache"
 	"github.com/schollz/closestmatch"
+)
+
+var (
+	defaultColor = 3447003
 )
 
 // Context main controller for all actions
@@ -29,7 +30,7 @@ type Context struct {
 	ConjureSpells            map[string]*xml.ConjureSpell
 	ConjureSpellsFuzzySearch *closestmatch.ClosestMatch
 	DB                       *sql.DB
-	Template                 *template.Template
+	Template                 map[string]*xml.CommandTemplate
 	Cache                    *cache.Cache
 }
 
@@ -48,12 +49,17 @@ type CommandOption struct {
 }
 
 // ExecuteTemplate executes the given markdown template file
-func (c *Context) ExecuteTemplate(name string, data map[string]interface{}) (string, error) {
-	buff := &bytes.Buffer{}
-	if err := c.Template.ExecuteTemplate(buff, name+c.Config.Template.Extension, data); err != nil {
-		return "", err
+func (c *Context) ExecuteTemplate(name string, data map[string]interface{}) (*discordgo.MessageEmbed, error) {
+	msg, err := c.Template[name+c.Config.Template.Extension].Execute(data)
+	if err != nil {
+		return nil, err
 	}
-	return buff.String(), nil
+
+	// Set default color if none
+	if msg.Color <= 0 {
+		msg.Color = defaultColor
+	}
+	return msg, nil
 }
 
 // RenderUsage sends a message with the command usage

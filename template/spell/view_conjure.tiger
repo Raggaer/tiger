@@ -1,3 +1,5 @@
+<template>
+<description>
 Name: **{{ .conjure.Name }}** (**{{ .conjure.Words }}**)
 Level: **{{ .conjure.Level }}**
 Mana: **{{ .conjure.Mana }}**
@@ -7,3 +9,5 @@ Usable by:
 {{- range $index, $element := .conjure.Vocations }}
 - **{{ $element.Name }}**
 {{- end }}
+</description>
+</template>

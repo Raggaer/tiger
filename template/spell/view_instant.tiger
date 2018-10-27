@@ -1,3 +1,8 @@
+<template>
+<title>
+Instant spell {{ .spell.Name }}
+</title>
+<description>
 Name: **{{ .spell.Name }}** (**{{ .spell.Words }}**)
 Level: **{{ .spell.Level }}**
 Mana: **{{ .spell.Mana }}**
@@ -6,3 +11,5 @@ Usable by:
 {{- range $index, $element := .spell.Vocations }}
 - **{{ $element.Name }}**
 {{- end }}
+</description>
+</template>

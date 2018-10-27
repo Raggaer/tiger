@@ -16,50 +16,23 @@ var (
 
 // Version returns the current running version
 func Version(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
-	data, err := context.ExecuteTemplate("version", map[string]interface{}{
+	return context.ExecuteTemplate("version", map[string]interface{}{
 		"version":   ApplicationVersion,
 		"buildDate": BuildDate,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "Version",
-		Description: data,
-		Color:       3447003,
-	}, nil
 }
 
 // Uptime returns the current bot uptime
 func Uptime(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
-	data, err := context.ExecuteTemplate("uptime", map[string]interface{}{
+	return context.ExecuteTemplate("uptime", map[string]interface{}{
 		"start":   context.Start,
 		"current": time.Now(),
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "Uptime",
-		Description: data,
-		Color:       3447003,
-	}, nil
 }
 
 // About returns information about tiger
 func About(context *Context, s *discordgo.Session, m *discordgo.MessageCreate) (*discordgo.MessageEmbed, error) {
-	data, err := context.ExecuteTemplate("about", nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "About",
-		Description: data,
-		Color:       3447003,
-	}, nil
+	return context.ExecuteTemplate("about", nil)
 }
 
 func uptimeMessage(day, hour, min, sec int) string {

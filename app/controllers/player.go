@@ -91,19 +91,10 @@ func ViewPlayer(context *Context, s *discordgo.Session, m *discordgo.MessageCrea
 		}
 	}
 
-	data, err := context.ExecuteTemplate("player_info", map[string]interface{}{
+	return context.ExecuteTemplate("player_info", map[string]interface{}{
 		"vocationName": playerVocation,
 		"player":       player,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "View player " + player.Name,
-		Description: data,
-		Color:       3447003,
-	}, nil
 }
 
 // ViewPlayerDeaths retrieves the last deaths of the given player
@@ -120,17 +111,8 @@ func ViewPlayerDeaths(context *Context, s *discordgo.Session, m *discordgo.Messa
 		return nil, err
 	}
 
-	data, err := context.ExecuteTemplate("player_death", map[string]interface{}{
+	return context.ExecuteTemplate("player_death", map[string]interface{}{
 		"deaths": deaths,
 		"player": player,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "Latest " + player.Name + " deaths",
-		Description: data,
-		Color:       3447003,
-	}, nil
 }

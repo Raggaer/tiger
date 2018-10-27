@@ -39,18 +39,9 @@ func ViewMonster(context *Context, s *discordgo.Session, m *discordgo.MessageCre
 		return monsterCommand.RenderUsage("Monster not found", context, s, m)
 	}
 
-	data, err := context.ExecuteTemplate("monster_info", map[string]interface{}{
+	return context.ExecuteTemplate("monster_info", map[string]interface{}{
 		"monster": monster,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "Information about " + monster.Description,
-		Description: data,
-		Color:       3447003,
-	}, nil
 }
 
 // ViewMonsterKilledPlayers returns the list of victims od the given monster
@@ -67,19 +58,10 @@ func ViewMonsterKilledPlayers(context *Context, s *discordgo.Session, m *discord
 		return nil, err
 	}
 
-	data, err := context.ExecuteTemplate("monster_death", map[string]interface{}{
+	return context.ExecuteTemplate("monster_death", map[string]interface{}{
 		"deaths":  deaths,
 		"monster": monster,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       "Players killed by " + monster.Description,
-		Description: data,
-		Color:       3447003,
-	}, nil
 }
 
 // ViewMonsterLoot returns the list of items a monster can give
@@ -119,17 +101,8 @@ func ViewMonsterLoot(context *Context, s *discordgo.Session, m *discordgo.Messag
 		})
 	}
 
-	data, err := context.ExecuteTemplate("monster_loot", map[string]interface{}{
+	return context.ExecuteTemplate("monster_loot", map[string]interface{}{
 		"monster": monster,
 		"loot":    loot,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &discordgo.MessageEmbed{
-		Title:       monster.Name + " loot",
-		Description: data,
-		Color:       3447003,
-	}, nil
 }
