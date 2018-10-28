@@ -16,10 +16,32 @@ import (
 // CommandTemplate defines a controller template file
 type CommandTemplate struct {
 	tpl         *template.Template
-	XMLName     xml.Name `xml:"template"`
-	Title       string   `xml:"title"`
-	Color       int      `xml:"color"`
-	Description string   `xml:"description"`
+	XMLName     xml.Name                 `xml:"template"`
+	Title       string                   `xml:"title"`
+	Color       int                      `xml:"color"`
+	Description string                   `xml:"description"`
+	Footer      CommandTemplateFooter    `xml:"footer,omitempty"`
+	Thumbnail   CommandTemplateThumbnail `xml:"thumbnail,omitempty"`
+	Provider    CommandTemplateProvider  `xml:"provider,omitempty"`
+}
+
+// CommandTemplateProvider defines a message embed provider
+type CommandTemplateProvider struct {
+	Name string `xml:"name"`
+	URL  string `xml:"url"`
+}
+
+// CommandTemplateThumbnail defines a message embed thumbnail
+type CommandTemplateThumbnail struct {
+	URL    string `xml:"url"`
+	Width  int    `xml:"width"`
+	Height int    `xml:"height"`
+}
+
+// CommandTemplateFooter defines a message embed footer
+type CommandTemplateFooter struct {
+	Text string `xml:"text"`
+	Icon string `xml:"icon"`
 }
 
 // ParseTemplate parses the given template into a struct
@@ -43,6 +65,9 @@ func ParseTemplate(tpl string) (*CommandTemplate, error) {
 	if _, err := templateCmd.tpl.New("title").Parse(templateCmd.Title); err != nil {
 		return nil, err
 	}
+	if _, err := templateCmd.tpl.New("footer").Parse(templateCmd.Footer.Text); err != nil {
+		return nil, err
+	}
 	return templateCmd, nil
 }
 
@@ -50,7 +75,7 @@ func ParseTemplate(tpl string) (*CommandTemplate, error) {
 func (c *CommandTemplate) Execute(data map[string]interface{}) (*discordgo.MessageEmbed, error) {
 	// Parse description template
 	dataMap := map[string][]byte{}
-	parseTemplates := []string{"description", "title"}
+	parseTemplates := []string{"description", "title", "footer"}
 	for _, p := range parseTemplates {
 		buff := bytes.Buffer{}
 		if err := c.tpl.ExecuteTemplate(&buff, p, data); err != nil {
@@ -64,6 +89,10 @@ func (c *CommandTemplate) Execute(data map[string]interface{}) (*discordgo.Messa
 		Color:       c.Color,
 		Description: string(dataMap["description"]),
 		Title:       string(dataMap["title"]),
+		Footer: &discordgo.MessageEmbedFooter{
+			Text:    string(dataMap["footer"]),
+			IconURL: c.Footer.Icon,
+		},
 	}, nil
 }
 

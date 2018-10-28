@@ -1,3 +1,11 @@
 <template>
+  <title>Tiger - Open Tibia discord bot</title>
   <description>[https://github.com/Raggaer/tiger](https://github.com/Raggaer/tiger)</description>
+  <provider>
+    <name>Raggaer</name>
+    <url>https://github.com/Raggaer</url>
+  </provider>
+  <footer>
+    <text>Made by Raggaer#0954</text>
+  </footer>
 </template>
