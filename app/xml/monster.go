@@ -22,6 +22,17 @@ type Monster struct {
 	Defenses     MonsterDefenseList  `xml:"defenses"`
 	Voices       MonsterVoiceList    `xml:"voices"`
 	Loot         MonsterLootList     `xml:"loot"`
+	Elements     MonsterElements     `xml:"elements>element"`
+}
+
+type MonsterElements struct {
+	Ice      int `xml:"icePercent,attr"`
+	Earth    int `xml:"earthPercent,attr"`
+	Energy   int `xml:"energyPercent,attr"`
+	Fire     int `xml:"firePercent,attr"`
+	Holy     int `xml:"holyPercent,attr"`
+	Physical int `xml:"physicalPercent,attr"`
+	Death    int `xml:"deathPercent,attr"`
 }
 
 // MonsterHealth defines the monster health values
