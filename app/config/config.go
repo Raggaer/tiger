@@ -5,6 +5,7 @@ import (
 
 	"github.com/BurntSushi/toml"
 	lua "github.com/yuin/gopher-lua"
+	"golang.org/x/xerrors"
 )
 
 // Config defines the application config file
@@ -70,10 +71,30 @@ func loadServerConfig(path string, cfg *Config) error {
 	}
 
 	// Set database values into config struct
-	cfg.Database.Host = string(state.GetGlobal("mysqlHost").(lua.LString))
-	cfg.Database.User = string(state.GetGlobal("mysqlUser").(lua.LString))
-	cfg.Database.Password = string(state.GetGlobal("mysqlPass").(lua.LString))
-	cfg.Database.Schema = string(state.GetGlobal("mysqlDatabase").(lua.LString))
+	mysqlHost, ok := state.GetGlobal("mysqlHost").(lua.LString)
+	if !ok {
+		return xerrors.New("Unable to retrieve 'mysqlHost' field from config.lua")
+	}
+
+	mysqlUser, ok := state.GetGlobal("mysqlUser").(lua.LString)
+	if !ok {
+		return xerrors.New("Unable to retrieve 'mysqlUser' field from config.lua")
+	}
+
+	mysqlPass, ok := state.GetGlobal("mysqlPass").(lua.LString)
+	if !ok {
+		return xerrors.New("Unable to retrieve 'mysqlPass' field from config.lua")
+	}
+
+	mysqlDatabase, ok := state.GetGlobal("mysqlDatabase").(lua.LString)
+	if !ok {
+		return xerrors.New("Unable to retrieve 'mysqlDatabase' field from config.lua")
+	}
+
+	cfg.Database.Host = string(mysqlHost)
+	cfg.Database.User = string(mysqlUser)
+	cfg.Database.Password = string(mysqlPass)
+	cfg.Database.Schema = string(mysqlDatabase)
 
 	return nil
 }
