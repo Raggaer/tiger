@@ -2,6 +2,7 @@ package xml
 
 import (
 	"encoding/xml"
+	"fmt"
 	"os"
 
 	"github.com/schollz/closestmatch"
@@ -84,6 +85,9 @@ func LoadConjureSpells(path string) (*ConjureSpellList, error) {
 	list := ConjureSpellList{}
 	decoder := xml.NewDecoder(file)
 	if err := decoder.Decode(&list); err != nil {
+		if s, ok := err.(*xml.SyntaxError); ok {
+			return nil, fmt.Errorf("line %d, %s", s.Line, s.Msg)
+		}
 		return nil, err
 	}
 
@@ -103,6 +107,9 @@ func LoadInstantSpells(path string) (*InstantSpellList, error) {
 	list := InstantSpellList{}
 	decoder := xml.NewDecoder(file)
 	if err := decoder.Decode(&list); err != nil {
+		if s, ok := err.(*xml.SyntaxError); ok {
+			return nil, fmt.Errorf("line %d, %s", s.Line, s.Msg)
+		}
 		return nil, err
 	}
 
@@ -122,6 +129,9 @@ func LoadRuneSpells(path string) (*RuneSpellList, error) {
 	list := RuneSpellList{}
 	decoder := xml.NewDecoder(file)
 	if err := decoder.Decode(&list); err != nil {
+		if s, ok := err.(*xml.SyntaxError); ok {
+			return nil, fmt.Errorf("line %d, %s", s.Line, s.Msg)
+		}
 		return nil, err
 	}
 
